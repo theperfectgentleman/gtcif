@@ -1,5 +1,6 @@
 import React from 'react';
 import Container from '../ui/Container';
+import Button from '../ui/Button';
 
 const Contact: React.FC = () => {
     const year = 2026;
@@ -59,6 +60,17 @@ const Contact: React.FC = () => {
                                         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="font-semibold text-brand-gold hover:opacity-90">Facebook</a>
                                         <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="font-semibold text-brand-gold hover:opacity-90">Twitter</a>
                                         <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="font-semibold text-brand-gold hover:opacity-90">Instagram</a>
+                                    </div>
+
+                                    <div className="mt-8 flex justify-center">
+                                        <Button
+                                            href="/register"
+                                            variant="outline"
+                                            size="large"
+                                            className="border-2 border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-brand-black px-10 py-4 rounded-md font-bold uppercase tracking-widest no-underline"
+                                        >
+                                            Register Now
+                                        </Button>
                                     </div>
                                 </div>
                             </div>

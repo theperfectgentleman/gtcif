@@ -1,6 +1,7 @@
 import React from 'react';
 import Container from '../ui/Container';
 import FallingLeaves from '../FallingLeaves';
+import Button from '../ui/Button';
 
 const ThemeSection: React.FC = () => {
     return (
@@ -17,6 +18,17 @@ const ThemeSection: React.FC = () => {
                     <p className="text-xl md:text-2xl text-gray-600 font-medium leading-relaxed">
                         Showcasing the Value and Potential of Tree Crops as a Significant Contributor to Ghana&apos;s Economy
                     </p>
+
+                    <div className="mt-10 flex justify-center">
+                        <Button
+                            href="/register"
+                            variant="primary"
+                            size="large"
+                            className="px-10 py-4 rounded-md font-bold uppercase tracking-widest shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 no-underline"
+                        >
+                            Register Now
+                        </Button>
+                    </div>
                 </div>
             </Container>
         </section>

@@ -14,8 +14,9 @@ export const ScrollReveal = ({ children, width = 'fit-content', delay = 0 }: Scr
     const isInView = useInView(ref, { once: true, margin: "-50px" });
 
     return (
-        <div ref={ref} style={{ position: 'relative', width, overflow: 'hidden' }}>
+        <div ref={ref} className="h-full" style={{ position: 'relative', width, overflow: 'hidden' }}>
             <motion.div
+                className="h-full"
                 variants={{
                     hidden: { opacity: 0, y: 75 },
                     visible: { opacity: 1, y: 0 },

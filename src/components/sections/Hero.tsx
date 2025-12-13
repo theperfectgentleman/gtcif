@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { motion, useReducedMotion, AnimatePresence } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import Countdown from '../Countdown';
 import Button from '../ui/Button';
 
@@ -24,6 +24,8 @@ const HERO_IMAGES = [
 const Hero: React.FC = () => {
     const reduceMotion = useReducedMotion();
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [nextImageIndex, setNextImageIndex] = useState<number | null>(null);
+    const [nextLoaded, setNextLoaded] = useState(false);
 
     useEffect(() => {
         // Randomly pick one image on load
@@ -31,39 +33,77 @@ const Hero: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        const intervalMs = 6500;
+        const fadeMs = reduceMotion ? 0 : 900;
+
         const interval = setInterval(() => {
-            setCurrentImageIndex((prev) => (prev + 1) % HERO_IMAGES.length);
-        }, 8000);
+            setNextLoaded(false);
+            setNextImageIndex((prev) => {
+                const base = prev ?? currentImageIndex;
+                return (base + 1) % HERO_IMAGES.length;
+            });
+        }, intervalMs);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [currentImageIndex, reduceMotion]);
+
+    useEffect(() => {
+        if (nextImageIndex === null) return;
+        if (reduceMotion) {
+            setCurrentImageIndex(nextImageIndex);
+            setNextImageIndex(null);
+            return;
+        }
+
+        if (!nextLoaded) return;
+        const id = window.setTimeout(() => {
+            setCurrentImageIndex(nextImageIndex);
+            setNextImageIndex(null);
+            setNextLoaded(false);
+        }, 900);
+
+        return () => window.clearTimeout(id);
+    }, [nextImageIndex, nextLoaded, reduceMotion]);
 
     return (
         <section className="relative h-screen min-h-[700px] flex items-center overflow-hidden">
             {/* Background Image */}
             <div className="absolute inset-0 bg-gray-900">
-                <AnimatePresence mode="popLayout">
+                <motion.div
+                    className="absolute inset-0"
+                    animate={{ opacity: 1, scale: reduceMotion ? 1 : 1.08 }}
+                    transition={{
+                        opacity: { duration: 0.8 },
+                        scale: { duration: 18, ease: 'easeOut' },
+                    }}
+                >
+                    <Image
+                        src={HERO_IMAGES[currentImageIndex]}
+                        alt="Hero Background"
+                        fill
+                        priority
+                        sizes="100vw"
+                        className="object-cover scale-x-[-1]"
+                    />
+                </motion.div>
+
+                {nextImageIndex !== null ? (
                     <motion.div
-                        key={currentImageIndex}
                         className="absolute inset-0"
-                        initial={{ opacity: 0, scale: reduceMotion ? 1 : 1.02 }}
-                        animate={{ opacity: 1, scale: reduceMotion ? 1 : 1.08 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ 
-                            opacity: { duration: 2 },
-                            scale: { duration: 18, ease: 'easeOut' }
-                        }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: nextLoaded ? 1 : 0 }}
+                        transition={{ duration: reduceMotion ? 0 : 0.9 }}
                     >
                         <Image
-                            src={HERO_IMAGES[currentImageIndex]}
+                            src={HERO_IMAGES[nextImageIndex]}
                             alt="Hero Background"
                             fill
-                            priority
                             sizes="100vw"
                             className="object-cover scale-x-[-1]"
+                            onLoadingComplete={() => setNextLoaded(true)}
                         />
                     </motion.div>
-                </AnimatePresence>
+                ) : null}
 
                 {/* Premium overlays: vignette + brand-tinted gradient */}
                 <div className="absolute inset-0 bg-black bg-opacity-50 z-10" />

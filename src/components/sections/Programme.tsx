@@ -7,7 +7,7 @@ import { ScrollReveal } from '../ui/ScrollReveal';
 
 const Programme: React.FC = () => {
     return (
-        <section id="programme" className="py-20 bg-[#fff7f2]">
+        <section id="programme" className="py-20 bg-gray-100">
             <Container>
                 <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-4xl font-bold text-brand-black mb-4 uppercase tracking-[0.18em]">
@@ -18,7 +18,7 @@ const Programme: React.FC = () => {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10 items-stretch">
                     {programme.map((dayBlock, index) => {
                         const hasMoreActivities = dayBlock.activities.length > 3;
                         const previewActivities = dayBlock.activities.slice(0, 3);
@@ -47,7 +47,7 @@ const Programme: React.FC = () => {
                                                 </span>
                                             </div>
 
-                                            <div className="mt-4 h-[4px] bg-[#ffe1c7] group-hover:bg-brand-gold transition-colors duration-300" />
+                                            <div className="mt-4 h-[4px] bg-brand-gold/20 group-hover:bg-brand-gold transition-colors duration-300" />
                                         </div>
 
                                         <div className="mt-5">
