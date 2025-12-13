@@ -17,13 +17,13 @@ const Contact: React.FC = () => {
     while (cells.length < 42) cells.push(null);
 
     return (
-        <section id="contact" className="relative overflow-hidden py-24">
+        <section id="contact" className="relative overflow-hidden py-24 bg-brand-black">
             <div
                 aria-hidden="true"
                 className="absolute inset-0 bg-center bg-cover bg-no-repeat bg-fixed"
                 style={{ backgroundImage: "url('/images/contact-calendar-parallax.jpg')" }}
             />
-            <div aria-hidden="true" className="absolute inset-0 bg-brand-black/75" />
+            <div aria-hidden="true" className="absolute inset-0 bg-brand-black/95" />
 
             <Container>
                 <div className="relative">
