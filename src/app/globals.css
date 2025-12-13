@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    /* Brand palette */
+    --brand-black: #070707;
+    --brand-gold: #b08d2a;
+    --brand-green: #1d6b2d;
+
+    /* RGB helpers (for translucent overlays without hard-coding colors in components) */
+    --brand-black-rgb: 7, 7, 7;
+    --brand-gold-rgb: 176, 141, 42;
+    --brand-green-rgb: 29, 107, 45;
+
+    /* Optional loader font override */
+    --font-loader: ui-serif, Georgia, 'Times New Roman', serif;
+}
+
+@layer base {
+    * { box-sizing: border-box; }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    html, body {
+        margin: 0;
+        padding: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        background-color: #f9f9f9;
+        color: #153D63;
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        margin: 0;
+        padding: 0;
+    }
+
+    a {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-color: rgba(var(--brand-gold-rgb), 0.35);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 3px;
+        transition: text-decoration-color 250ms ease, opacity 250ms ease;
+    }
+
+    a:hover {
+        text-decoration-color: rgba(var(--brand-gold-rgb), 0.9);
+    }
+
+    ::selection {
+        background: rgba(var(--brand-gold-rgb), 0.25);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* Tailwind color helpers for the loader */
+@layer utilities {
+    .bg-brand-black { background-color: var(--brand-black); }
+    .bg-brand-gold { background-color: var(--brand-gold); }
+    .bg-brand-green { background-color: var(--brand-green); }
+    .text-brand-gold { color: var(--brand-gold); }
+    .text-brand-green { color: var(--brand-green); }
+    .text-brand-black { color: var(--brand-black); }
+
+    .bg-brand-gold-soft { background-color: rgba(var(--brand-gold-rgb), 0.12); }
+    .bg-brand-green-soft { background-color: rgba(var(--brand-green-rgb), 0.10); }
+}
