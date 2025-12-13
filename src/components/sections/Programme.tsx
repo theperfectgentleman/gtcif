@@ -14,7 +14,7 @@ const Programme: React.FC = () => {
                         Event Programme
                     </h2>
                     <p className="text-sm text-gray-600 max-w-2xl mx-auto">
-                        A four-day journey across Ghana's key tree crop value chains — from opening ceremony to closing gala.
+                        A four-day journey across Ghana&apos;s key tree crop value chains — from opening ceremony to closing gala.
                     </p>
                 </div>
 

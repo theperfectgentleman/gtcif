@@ -49,27 +49,6 @@ const Butterfly = ({ delay = 0, top = '50%', left = '10%' }) => (
     </motion.div>
 );
 
-const FloatingLeaf = ({ delay = 0, left = '50%' }) => (
-    <motion.div
-        className="absolute top-0 z-0 pointer-events-none text-brand-green opacity-20"
-        style={{ left }}
-        animate={{
-            y: ['-10vh', '110vh'],
-            rotate: [0, 360],
-            x: [0, 50, -50, 0]
-        }}
-        transition={{
-            duration: 15,
-            repeat: Infinity,
-            delay: delay,
-            ease: "linear"
-        }}
-    >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17,8C8,10,5.9,16.17,3.82,21.34L5.71,22l1-2.3A4.49,4.49,0,0,0,8,20C19,20,22,3,22,3,21,5,14,5.25,9,6.25S2,11.5,2,13.5a6.22,6.22,0,0,0,1.75,3.75C7,8,17,8,17,8Z" />
-        </svg>
-    </motion.div>
-);
 
 const NatureDecorations = () => {
     return (

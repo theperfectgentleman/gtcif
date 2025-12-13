@@ -1,6 +1,5 @@
 import React from 'react';
 import Container from '../ui/Container';
-import { content } from '../../data/content';
 import FallingLeaves from '../FallingLeaves';
 
 const ThemeSection: React.FC = () => {

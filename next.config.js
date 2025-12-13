@@ -1,5 +1,6 @@
 module.exports = {
   reactStrictMode: true,
+  serverExternalPackages: ['sqlite3'],
   images: {
     domains: ['your-image-domain.com'], // Add your image domains here
   },
