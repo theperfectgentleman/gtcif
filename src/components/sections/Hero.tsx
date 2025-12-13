@@ -18,6 +18,7 @@ const HERO_IMAGES = [
     '/gt_images/palm1.jpg',
     '/gt_images/palm2.jpg',
     '/gt_images/conf6.jpg',
+    '/gt_images/palm_drone.jpg',
 ];
 
 const Hero: React.FC = () => {
@@ -59,7 +60,7 @@ const Hero: React.FC = () => {
                             fill
                             priority
                             sizes="100vw"
-                            className="object-cover"
+                            className="object-cover scale-x-[-1]"
                         />
                     </motion.div>
                 </AnimatePresence>

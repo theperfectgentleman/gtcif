@@ -25,6 +25,7 @@ module.exports = {
         fadeUp: 'fadeUp 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both',
         kenBurns: 'kenBurns 18s ease-out both',
         floatSlow: 'floatSlow 12s ease-in-out infinite',
+        logoMarquee: 'logoMarquee 26s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -46,6 +47,10 @@ module.exports = {
         floatSlow: {
           '0%, 100%': { transform: 'translate3d(0, 0, 0)' },
           '50%': { transform: 'translate3d(0, -10px, 0)' },
+        },
+        logoMarquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
         },
       },
     },

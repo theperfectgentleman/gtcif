@@ -4,6 +4,247 @@ import React, { useState } from 'react';
 import Input from './ui/Input';
 import Button from './ui/Button';
 
+const COUNTRIES = [
+    'Afghanistan',
+    'Albania',
+    'Algeria',
+    'Andorra',
+    'Angola',
+    'Antigua and Barbuda',
+    'Argentina',
+    'Armenia',
+    'Australia',
+    'Austria',
+    'Azerbaijan',
+    'Bahamas',
+    'Bahrain',
+    'Bangladesh',
+    'Barbados',
+    'Belarus',
+    'Belgium',
+    'Belize',
+    'Benin',
+    'Bhutan',
+    'Bolivia',
+    'Bosnia and Herzegovina',
+    'Botswana',
+    'Brazil',
+    'Brunei',
+    'Bulgaria',
+    'Burkina Faso',
+    'Burundi',
+    'Cabo Verde',
+    'Cambodia',
+    'Cameroon',
+    'Canada',
+    'Central African Republic',
+    'Chad',
+    'Chile',
+    'China',
+    'Colombia',
+    'Comoros',
+    'Congo (Brazzaville)',
+    'Congo (Kinshasa)',
+    'Costa Rica',
+    "Cote d'Ivoire",
+    'Croatia',
+    'Cuba',
+    'Cyprus',
+    'Czechia',
+    'Denmark',
+    'Djibouti',
+    'Dominica',
+    'Dominican Republic',
+    'Ecuador',
+    'Egypt',
+    'El Salvador',
+    'Equatorial Guinea',
+    'Eritrea',
+    'Estonia',
+    'Eswatini',
+    'Ethiopia',
+    'Fiji',
+    'Finland',
+    'France',
+    'Gabon',
+    'Gambia',
+    'Georgia',
+    'Germany',
+    'Ghana',
+    'Greece',
+    'Grenada',
+    'Guatemala',
+    'Guinea',
+    'Guinea-Bissau',
+    'Guyana',
+    'Haiti',
+    'Honduras',
+    'Hungary',
+    'Iceland',
+    'India',
+    'Indonesia',
+    'Iran',
+    'Iraq',
+    'Ireland',
+    'Israel',
+    'Italy',
+    'Jamaica',
+    'Japan',
+    'Jordan',
+    'Kazakhstan',
+    'Kenya',
+    'Kiribati',
+    'Kuwait',
+    'Kyrgyzstan',
+    'Laos',
+    'Latvia',
+    'Lebanon',
+    'Lesotho',
+    'Liberia',
+    'Libya',
+    'Liechtenstein',
+    'Lithuania',
+    'Luxembourg',
+    'Madagascar',
+    'Malawi',
+    'Malaysia',
+    'Maldives',
+    'Mali',
+    'Malta',
+    'Marshall Islands',
+    'Mauritania',
+    'Mauritius',
+    'Mexico',
+    'Micronesia',
+    'Moldova',
+    'Monaco',
+    'Mongolia',
+    'Montenegro',
+    'Morocco',
+    'Mozambique',
+    'Myanmar',
+    'Namibia',
+    'Nauru',
+    'Nepal',
+    'Netherlands',
+    'New Zealand',
+    'Nicaragua',
+    'Niger',
+    'Nigeria',
+    'North Korea',
+    'North Macedonia',
+    'Norway',
+    'Oman',
+    'Pakistan',
+    'Palau',
+    'Panama',
+    'Papua New Guinea',
+    'Paraguay',
+    'Peru',
+    'Philippines',
+    'Poland',
+    'Portugal',
+    'Qatar',
+    'Romania',
+    'Russia',
+    'Rwanda',
+    'Saint Kitts and Nevis',
+    'Saint Lucia',
+    'Saint Vincent and the Grenadines',
+    'Samoa',
+    'San Marino',
+    'Sao Tome and Principe',
+    'Saudi Arabia',
+    'Senegal',
+    'Serbia',
+    'Seychelles',
+    'Sierra Leone',
+    'Singapore',
+    'Slovakia',
+    'Slovenia',
+    'Solomon Islands',
+    'Somalia',
+    'South Africa',
+    'South Korea',
+    'South Sudan',
+    'Spain',
+    'Sri Lanka',
+    'Sudan',
+    'Suriname',
+    'Sweden',
+    'Switzerland',
+    'Syria',
+    'Taiwan',
+    'Tajikistan',
+    'Tanzania',
+    'Thailand',
+    'Timor-Leste',
+    'Togo',
+    'Tonga',
+    'Trinidad and Tobago',
+    'Tunisia',
+    'Turkey',
+    'Turkmenistan',
+    'Tuvalu',
+    'Uganda',
+    'Ukraine',
+    'United Arab Emirates',
+    'United Kingdom',
+    'United States',
+    'Uruguay',
+    'Uzbekistan',
+    'Vanuatu',
+    'Vatican City',
+    'Venezuela',
+    'Vietnam',
+    'Yemen',
+    'Zambia',
+    'Zimbabwe',
+    'Other',
+];
+
+const JOB_TITLE_OPTIONS = [
+    'Programme Officer',
+    'Program Officer',
+    'Project Officer',
+    'Project Manager',
+    'Project Coordinator',
+    'Portfolio Manager',
+    'Technical Advisor',
+    'Chief of Party',
+    'Country Director',
+    'Regional Director',
+    'Executive Director',
+    'Managing Director',
+    'Chief Executive Officer (CEO)',
+    'Director',
+    'Deputy Director',
+    'Head of Programmes',
+    'Head of Programs',
+    'Partnerships Manager',
+    'Stakeholder Engagement Officer',
+    'Monitoring, Evaluation and Learning (MEL) Officer',
+    'Monitoring & Evaluation (M&E) Officer',
+    'Research Officer',
+    'Policy Analyst',
+    'Policy Officer',
+    'Agronomist',
+    'Extension Officer',
+    'Value Chain Specialist',
+    'Investment Officer',
+    'Private Sector Development Specialist',
+    'Grants Manager',
+    'Procurement Specialist',
+    'Finance Officer',
+    'Operations Manager',
+    'Communications Officer',
+    'Advocacy Officer',
+    'Gender Specialist',
+    'Safeguards Specialist',
+    'Data Analyst',
+    'Consultant',
+];
+
 type RegistrationFormProps = {
     onSuccess?: () => void;
 };
@@ -17,8 +258,6 @@ type FormData = {
     organization: string;
     jobTitle: string;
     country: string;
-    dietaryRequirements: string;
-    accessibilityNeeds: string;
 };
 
 type Errors = Partial<Record<keyof FormData | 'submit', string>>;
@@ -33,8 +272,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
         organization: '',
         jobTitle: '',
         country: '',
-        dietaryRequirements: '',
-        accessibilityNeeds: '',
     });
 
     const [errors, setErrors] = useState<Errors>({});
@@ -85,8 +322,9 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
             if (onSuccess) {
                 onSuccess();
             }
-        } catch (error: any) {
-            setErrors({ submit: error.message });
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : 'Registration failed';
+            setErrors({ submit: message });
         } finally {
             setIsSubmitting(false);
         }
@@ -195,48 +433,51 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                 {/* Job Title */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
-                    <Input
-                        name="jobTitle"
-                        value={formData.jobTitle}
-                        onChange={handleChange}
-                        placeholder="e.g. Director, Manager"
-                    />
+                    <div className="w-full">
+                        <input
+                            name="jobTitle"
+                            value={formData.jobTitle}
+                            onChange={handleChange}
+                            placeholder="Select or type your role"
+                            list="jobTitle-options"
+                            className="w-full border rounded-md p-2 bg-white/90 focus:outline-none focus:ring-2 focus:ring-brand-gold border-gray-300"
+                        />
+                        <datalist id="jobTitle-options">
+                            {JOB_TITLE_OPTIONS.map((title) => (
+                                <option key={title} value={title} />
+                            ))}
+                        </datalist>
+                    </div>
                 </div>
 
                 {/* Country */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Country *</label>
-                    <Input
-                        name="country"
-                        value={formData.country}
-                        onChange={handleChange}
-                        error={errors.country}
-                        placeholder="Country of Residence"
-                        required
-                    />
-                </div>
-
-                {/* Dietary Requirements */}
-                <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Dietary Requirements</label>
-                    <Input
-                        name="dietaryRequirements"
-                        value={formData.dietaryRequirements}
-                        onChange={handleChange}
-                        placeholder="e.g. Vegetarian, Halal, Allergies"
-                    />
-                </div>
-
-                {/* Accessibility Needs */}
-                <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Accessibility Needs</label>
-                    <textarea
-                        name="accessibilityNeeds"
-                        value={formData.accessibilityNeeds}
-                        onChange={handleChange}
-                        className="w-full border border-gray-300 rounded-md p-2 bg-white/90 focus:outline-none focus:ring-2 focus:ring-brand-gold h-24"
-                        placeholder="Please let us know if you have any specific accessibility requirements."
-                    />
+                    <div className="w-full">
+                        <select
+                            name="country"
+                            value={formData.country}
+                            onChange={handleChange}
+                            required
+                            className={`w-full border rounded-md p-2 bg-white/90 focus:outline-none focus:ring-2 focus:ring-brand-gold ${
+                                errors.country ? 'border-red-500' : 'border-gray-300'
+                            }`}
+                            aria-invalid={!!errors.country}
+                            aria-describedby={errors.country ? 'country-error' : undefined}
+                        >
+                            <option value="">Select Country</option>
+                            {COUNTRIES.map((c) => (
+                                <option key={c} value={c}>
+                                    {c}
+                                </option>
+                            ))}
+                        </select>
+                        {errors.country ? (
+                            <p id="country-error" className="mt-1 text-sm text-red-600">
+                                {errors.country}
+                            </p>
+                        ) : null}
+                    </div>
                 </div>
             </div>
 

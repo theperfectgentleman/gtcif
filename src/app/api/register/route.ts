@@ -13,9 +13,7 @@ export async function POST(request: Request) {
             phone,
             organization,
             jobTitle,
-            country,
-            dietaryRequirements,
-            accessibilityNeeds
+            country
         } = body;
 
         // Basic validation
@@ -29,12 +27,13 @@ export async function POST(request: Request) {
         try {
             await db.run(
                 `INSERT INTO registrants (
-                    title, firstName, lastName, email, phone, organization, jobTitle, country, dietaryRequirements, accessibilityNeeds
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                [title, firstName, lastName, email, phone, organization, jobTitle, country, dietaryRequirements, accessibilityNeeds]
+                    title, firstName, lastName, email, phone, organization, jobTitle, country
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                [title, firstName, lastName, email, phone, organization, jobTitle, country]
             );
-        } catch (dbError: any) {
-            if (dbError.message && dbError.message.includes('UNIQUE constraint failed')) {
+        } catch (dbError: unknown) {
+            const message = dbError instanceof Error ? dbError.message : '';
+            if (message && message.includes('UNIQUE constraint failed')) {
                 return NextResponse.json({ error: 'This email is already registered.' }, { status: 400 });
             }
             throw dbError;
