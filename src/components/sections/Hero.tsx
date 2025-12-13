@@ -34,7 +34,6 @@ const Hero: React.FC = () => {
 
     useEffect(() => {
         const intervalMs = 6500;
-        const fadeMs = reduceMotion ? 0 : 900;
 
         const interval = setInterval(() => {
             setNextLoaded(false);
