@@ -10,7 +10,7 @@ const Navbar = () => {
                     {/* Logo Section */}
                     <div className="flex-shrink-0 flex items-center">
                         <Link href="/" className="flex items-center gap-2 no-underline">
-                            <span className="text-2xl font-bold text-brand-green tracking-tight">GTCIF</span>
+                            <span className="text-2xl font-bold text-brand-green tracking-tight">GTCIS</span>
                             <span className="text-2xl font-light text-brand-black">2026</span>
                         </Link>
                     </div>

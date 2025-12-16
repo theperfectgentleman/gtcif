@@ -39,7 +39,7 @@ const Background: React.FC = () => {
                         In line with the Government of Ghana’s Resetting Agenda, led by His Excellency John Dramani Mahama, the Tree Crops Development Authority (TCDA) seeks to highlight its commitment to the Government of Ghana’s Agriculture for Economic Transformation Agenda (AETA).
                     </p>
                     <p>
-                        This event presents a unique opportunity to engage key stakeholders and attract new investment into the industry. The National Tree Crops Investment Fair & Business Forum aims to drive investments, raise awareness, promote the sector, and strengthen collaboration among diverse partners.
+                        This event presents a unique opportunity to engage key stakeholders and attract new investment into the industry. The National Tree Crops Investment Summit aims to drive investments, raise awareness, promote the sector, and strengthen collaboration among diverse partners.
                     </p>
                     <p className="text-white font-semibold">
                         Join us as we showcase the value and potential of tree crops as a significant contributor to Ghana’s economy.

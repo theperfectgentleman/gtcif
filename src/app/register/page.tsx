@@ -13,7 +13,7 @@ const RegisterPage = () => {
 
     return (
         <Container>
-            <h1 className="text-2xl font-bold text-center my-8">Register for the 1st Ghana Tree Crops Investment Fair & Exhibition</h1>
+            <h1 className="text-2xl font-bold text-center my-8">Register for the 1st Ghana Tree Crops Investment Summit</h1>
             {isSubmitted ? (
                 <div className="text-center">
                     <h2 className="text-xl font-semibold">Thank you for registering!</h2>

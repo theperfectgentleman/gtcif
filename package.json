@@ -1,7 +1,7 @@
 {
   "name": "gtcif-2026-website",
   "version": "1.0.0",
-  "description": "Website for the 1st Ghana Tree Crops Investment Fair & Exhibition (GTCIF) 2026",
+  "description": "Website for the 1st Ghana Tree Crops Investment Summit (GTCIS) 2026",
   "main": "src/app/page.tsx",
   "scripts": {
     "dev": "next dev",
@@ -13,8 +13,7 @@
   "keywords": [
     "Ghana",
     "Tree Crops",
-    "Investment Fair",
-    "Exhibition",
+    "Investment Summit",
     "Next.js"
   ],
   "author": "Your Name",

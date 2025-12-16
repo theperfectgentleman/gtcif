@@ -35,7 +35,7 @@ const Outcomes = () => {
                     Expected Outcomes
                 </h2>
                 <p className="text-xl md:text-2xl text-center text-gray-200 mb-16 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-                    The Investment Fair seeks to achieve the following outcomes:
+                    The Investment Summit seeks to achieve the following outcomes:
                 </p>
                 
                 <div className="max-w-4xl mx-auto">

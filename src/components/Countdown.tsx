@@ -35,7 +35,7 @@ const Countdown: React.FC<CountdownProps> = ({ targetDate }) => {
 
     return (
             <div className="mt-10">
-                <h2 className="text-sm uppercase tracking-widest text-white/80 mb-4 font-semibold">Countdown to GTCIF 2026</h2>
+                <h2 className="text-sm uppercase tracking-widest text-white/80 mb-4 font-semibold">Countdown to GTCIS 2026</h2>
 
                 <div className="flex flex-wrap gap-4">
                     <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md border border-white/20 rounded-lg w-24 h-24 shadow-lg">

@@ -58,8 +58,8 @@ const BadgePage = () => {
                 <div className="h-1/3 bg-brand-green relative">
                     <div className="absolute inset-0 opacity-20 bg-[url('/gt_images/cocoa-bg.jpg')] bg-cover bg-center"></div>
                     <div className="relative z-10 h-full flex flex-col items-center justify-center text-white p-4 text-center">
-                        <h1 className="text-xl font-bold leading-tight">GTCIF 2026</h1>
-                        <p className="text-xs mt-1">Ghana Tree Crops Investment Fair</p>
+                        <h1 className="text-xl font-bold leading-tight">GTCIS 2026</h1>
+                        <p className="text-xs mt-1">Ghana Tree Crops Investment Summit</p>
                     </div>
                 </div>
 

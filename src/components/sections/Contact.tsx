@@ -30,7 +30,7 @@ const Contact: React.FC = () => {
                 <div className="relative">
                     <h2 className="text-3xl md:text-4xl font-bold text-center text-brand-gold mb-4">Contact Us</h2>
                     <p className="text-center text-white/80 mb-10 max-w-3xl mx-auto leading-relaxed">
-                        For inquiries related to the 1st Ghana Tree Crops Investment Fair & Exhibition (GTCIF) 2026,
+                        For inquiries related to the 1st Ghana Tree Crops Investment Summit (GTCIS) 2026,
                         reach out using the details below and save the dates in your calendar.
                     </p>
 

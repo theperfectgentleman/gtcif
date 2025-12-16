@@ -1,6 +1,6 @@
 export const content = {
   hero: {
-    title: "1st Ghana Tree Crops Investment Fair & Exhibition (GTCIF) 2026",
+    title: "1st Ghana Tree Crops Investment Summit (GTCIS) 2026",
     subtitle: "Ghana's Green Gold: Showcasing the Value and Potential of Tree Crops",
     buttonText: "Register Now",
   },
@@ -10,11 +10,11 @@ export const content = {
     theme: "Ghana's Green Gold: Showcasing the Value and Potential of Tree Crops as a Significant Contributor to Ghana's Economy",
   },
   background: {
-    title: "Background of GTCIF",
-    description: "In line with the Government of Ghana’s Resetting Agenda, the Tree Crops Development Authority (TCDA) seeks to highlight its commitment to the Agriculture for Economic Transformation Agenda (AETA), aimed at modernizing agriculture and promoting agri-business.",
+    title: "Background of GTCIS",
+    description: "In line with the Government of Ghana's Resetting Agenda, the Tree Crops Development Authority (TCDA) seeks to highlight its commitment to the Agriculture for Economic Transformation Agenda (AETA), aimed at modernizing agriculture and promoting agri-business.",
   },
   objectives: {
-    title: "Objectives of the Investment Fair",
+    title: "Objectives of the Investment Summit",
     items: [
       "Attract investments into the tree crops sector.",
       "Raise awareness about the potential of tree crops.",

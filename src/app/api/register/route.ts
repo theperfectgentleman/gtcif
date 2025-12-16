@@ -57,14 +57,14 @@ export async function POST(request: Request) {
         });
 
         const mailOptions = {
-            from: '"GTCIF 2026" <no-reply@gtcif.com>', // Sender address
+            from: '"GTCIS 2026" <no-reply@gtcif.com>', // Sender address
             to: email,
-            subject: 'Registration Confirmation - GTCIF 2026',
+            subject: 'Registration Confirmation - GTCIS 2026',
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <h1 style="color: #2F855A;">Registration Confirmed</h1>
                     <p>Dear ${title ? title + ' ' : ''}${firstName} ${lastName},</p>
-                    <p>Thank you for registering for the <strong>1st Ghana Tree Crops Investment Fair & Exhibition (GTCIF 2026)</strong>.</p>
+                    <p>Thank you for registering for the <strong>1st Ghana Tree Crops Investment Summit (GTCIS 2026)</strong>.</p>
                     <p>We have received your registration details:</p>
                     <ul>
                         <li><strong>Organization:</strong> ${organization}</li>

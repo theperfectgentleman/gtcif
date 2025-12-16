@@ -6,10 +6,10 @@ const Audience: React.FC = () => {
         <section id="audience" className="py-20 bg-background">
             <Container>
                 <h2 className="text-3xl md:text-4xl font-bold text-center text-brand-black mb-4">
-                    Who You&apos;ll Meet at GTCIF
+                    Who You&apos;ll Meet at GTCIS
                 </h2>
                 <p className="text-lg text-gray-700 text-center mb-12 max-w-3xl mx-auto leading-relaxed">
-                    GTCIF brings together decision-makers, investors, producers, and ecosystem partners
+                    GTCIS brings together decision-makers, investors, producers, and ecosystem partners
                     shaping the future of Ghana&apos;s tree crops sector.
                 </p>
 

@@ -1,6 +1,6 @@
-# GTCIF 2026 Website
+# GTCIS 2026 Website
 
-Welcome to the GTCIF 2026 website project! This project is designed to promote the 1st Ghana Tree Crops Investment Fair & Exhibition (GTCIF) scheduled for February 17th - 20th, 2026, at the Accra International Conference Centre (AICC). The website aims to provide information about the event, facilitate registration, and engage stakeholders in the tree crops sector.
+Welcome to the GTCIS 2026 website project! This project is designed to promote the 1st Ghana Tree Crops Investment Summit (GTCIS) scheduled for February 17th - 20th, 2026, at the Accra International Conference Centre (AICC). The website aims to provide information about the event, facilitate registration, and engage stakeholders in the tree crops sector.
 
 ## Project Structure
 

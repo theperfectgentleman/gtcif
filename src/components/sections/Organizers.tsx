@@ -20,7 +20,7 @@ const Organizers = () => {
             <Container>
                 <h2 className="text-3xl md:text-4xl font-bold text-center text-brand-black mb-6">Organizers</h2>
                 <p className="text-center text-gray-700 mb-10 max-w-3xl mx-auto leading-relaxed">
-                    The 1st Ghana Tree Crops Investment Fair & Exhibition is organized by a dedicated team committed to promoting the tree crop sector in Ghana.
+                    The 1st Ghana Tree Crops Investment Summit is organized by a dedicated team committed to promoting the tree crop sector in Ghana.
                 </p>
 
                 <LogoSlider

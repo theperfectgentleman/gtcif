@@ -7,8 +7,8 @@ import AppShell from '../components/AppShell';
 import NatureDecorations from '../components/NatureDecorations';
 
 export const metadata = {
-    title: 'GTCIF 2026',
-    description: '1st Ghana Tree Crops Investment Fair & Exhibition (GTCIF) 2026',
+    title: 'GTCIS 2026',
+    description: '1st Ghana Tree Crops Investment Summit (GTCIS) 2026',
 };
 
 export default function RootLayout({
