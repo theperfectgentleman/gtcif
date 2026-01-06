@@ -1,100 +1,217 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { programme } from '../../data/programme';
 import Container from '../ui/Container';
 import Button from '../ui/Button';
-import { ScrollReveal } from '../ui/ScrollReveal';
+import { 
+  Clock, 
+  CheckCircle2, 
+  ArrowRight, 
+  MapPin, 
+  TrendingUp,
+  Activity,
+  Zap,
+  CalendarDays,
+  ExternalLink,
+  ChevronRight,
+  Award,
+  Users
+} from 'lucide-react';
 
 const Programme: React.FC = () => {
+    const [activeDay, setActiveDay] = useState(1);
+
+    // Event status tracking
+    const eventStatus = {
+        percentComplete: 0, // Update this based on current progress
+        currentDay: 1,
+        currentSession: "Registration and Networking",
+        nextSession: "Show of Documentaries & Videos",
+        venue: "AICC, Accra",
+    };
+
     return (
-        <section id="programme" className="py-20 bg-gray-100">
+        <section id="programme" className="py-20 bg-gray-50">
             <Container>
-                <div className="text-center mb-16">
-                    <h2 className="text-3xl md:text-4xl font-bold text-brand-black mb-4 uppercase tracking-[0.18em]">
-                        Event Programme
-                    </h2>
-                    <p className="text-sm text-gray-600 max-w-2xl mx-auto">
-                        A four-day journey across Ghana&apos;s key tree crop value chains -- from opening ceremony to closing gala.
-                    </p>
+                {/* Header */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+                    <div>
+                        <div className="inline-flex items-center space-x-2 bg-brand-green/10 text-brand-green px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-3">
+                            <Activity size={12} className="animate-pulse" />
+                            <span>GTCIS 2026</span>
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-bold text-brand-black leading-none">
+                            Event Programme
+                        </h2>
+                        <p className="text-sm text-gray-600 mt-2">
+                            A four-day journey across Ghana&apos;s key tree crop value chains
+                        </p>
+                    </div>
+                    <div className="text-right hidden md:block">
+                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">AICC, Accra</p>
+                        <p className="text-sm font-bold text-brand-black">February 17-20, 2026</p>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-10 items-stretch">
-                    {programme.map((dayBlock, index) => {
-                        const hasMoreActivities = dayBlock.activities.length > 3;
-                        const previewActivities = dayBlock.activities.slice(0, 3);
+                {/* Progress Card */}
+                <div className="bg-white rounded-3xl p-6 md:p-8 border border-gray-200 shadow-sm relative overflow-hidden mb-8">
+                    <TrendingUp className="absolute -right-8 -top-8 w-48 h-48 text-gray-50 opacity-10 rotate-12" />
+                    
+                    <div className="relative z-10">
+                        <div className="flex justify-between items-center mb-6">
+                            <div className="flex items-center space-x-4">
+                                <div className="bg-brand-black p-3 rounded-2xl shadow-lg">
+                                    <Activity className="text-brand-gold" size={24} />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-black uppercase tracking-tight text-brand-black">Summit Overview</h3>
+                                    <p className="text-sm font-bold text-brand-green">4 Days of Collaboration</p>
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <span className="text-3xl font-black text-brand-black">{eventStatus.percentComplete}%</span>
+                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Complete</p>
+                            </div>
+                        </div>
 
-                        return (
-                            <ScrollReveal key={dayBlock.day} width="100%" delay={index * 0.08}>
-                                <article
-                                    className="relative h-full bg-white rounded-[1.9rem] border border-orange-100/80 px-7 py-8 flex flex-col justify-between shadow-[0_18px_55px_rgba(0,0,0,0.06)] transition-all duration-300 ease-out cursor-pointer group hover:-translate-y-2 hover:shadow-[0_26px_70px_rgba(0,0,0,0.12)] hover:border-brand-gold/80"
-                                >
-                                    <div className="absolute inset-x-0 top-0 h-[6px] bg-brand-gold/0 group-hover:bg-brand-gold transition-colors duration-300" />
+                        <div className="w-full h-3 bg-gray-100 rounded-full mb-8 overflow-hidden">
+                            <div 
+                                className="h-full bg-gradient-to-r from-brand-green to-brand-gold transition-all duration-1000 ease-out"
+                                style={{ width: `${eventStatus.percentComplete}%` }}
+                            ></div>
+                        </div>
 
-                                    <div className="flex flex-col h-full justify-between">
-                                        <div>
-                                            <div className="flex items-end justify-between mb-3">
-                                                <p className="text-[0.7rem] uppercase tracking-[0.32em] text-gray-500">
-                                                    {dayBlock.day}
+                        <div className="bg-brand-green/5 border border-brand-green/20 rounded-2xl p-5 flex items-start space-x-4 max-w-2xl">
+                            <div className="bg-brand-green p-2 rounded-lg text-white">
+                                <CalendarDays size={16} />
+                            </div>
+                            <div className="flex-1">
+                                <span className="text-[10px] font-black text-brand-green uppercase tracking-widest block mb-1">Featured Session</span>
+                                <h4 className="font-bold text-brand-black leading-tight mb-2">{eventStatus.currentSession}</h4>
+                                <div className="flex items-center text-xs text-brand-green font-medium">
+                                    <MapPin size={12} className="mr-1.5" />
+                                    {eventStatus.venue}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Tabbed Navigation */}
+                <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div className="p-1 bg-gray-50 border-b border-gray-200 flex flex-wrap">
+                        {programme.map((dayBlock, index) => (
+                            <button
+                                key={index + 1}
+                                onClick={() => setActiveDay(index + 1)}
+                                className={`flex-1 min-w-[120px] py-4 px-6 text-sm font-bold transition-all relative ${
+                                    activeDay === index + 1
+                                    ? "text-brand-green bg-white shadow-sm" 
+                                    : "text-gray-400 hover:text-gray-600"
+                                }`}
+                            >
+                                <div className="flex flex-col items-center">
+                                    <span className="uppercase tracking-tighter">Day {index + 1}</span>
+                                    <span className="text-[10px] opacity-60 font-black">{dayBlock.monthShort} {dayBlock.date}</span>
+                                </div>
+                                {activeDay === index + 1 && (
+                                    <div className="absolute bottom-0 left-0 w-full h-1 bg-brand-green"></div>
+                                )}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="p-6 md:p-8">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-gray-100">
+                            <div className="flex items-center space-x-3">
+                                <div className="bg-brand-green text-white p-2.5 rounded-xl">
+                                    <CalendarDays size={20} />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-black text-brand-black tracking-tight uppercase">
+                                        {programme[activeDay - 1].theme}
+                                    </h3>
+                                    <p className="text-sm font-medium text-gray-400">{programme[activeDay - 1].day}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center space-x-2 text-xs font-bold text-gray-400 uppercase">
+                                <Clock size={14} />
+                                <span>{programme[activeDay - 1].activities.length} Sessions</span>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            {programme[activeDay - 1].activities.map((session, index) => {
+                                // Determine session status (you can make this dynamic based on actual event time)
+                                const getStatus = (): 'completed' | 'active' | 'upcoming' => {
+                                    // TODO: Make this dynamic based on actual event time
+                                    return 'upcoming';
+                                };
+                                const status = getStatus();
+                                
+                                return (
+                                    <div 
+                                        key={index} 
+                                        className={`group p-5 rounded-2xl border transition-all flex items-start gap-4 md:gap-6 ${
+                                            status === 'active' 
+                                            ? 'bg-brand-green/5 border-brand-green/30 ring-2 ring-brand-green/10 ring-offset-2' 
+                                            : status === 'completed'
+                                            ? 'bg-gray-50 border-gray-100 opacity-60'
+                                            : 'bg-white border-gray-200 hover:border-brand-gold/30 hover:shadow-sm'
+                                        }`}
+                                    >
+                                        <div className="min-w-[100px] pt-1">
+                                            <span className={`text-[11px] font-black uppercase tracking-tighter px-2 py-1 rounded inline-block text-center w-full ${
+                                                status === 'active' ? 'bg-brand-green text-white' : 'bg-gray-200 text-gray-600'
+                                            }`}>
+                                                {session.time}
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="flex-grow">
+                                            <div className="flex items-center gap-2 mb-1">
+                                                <h5 className={`font-bold text-lg leading-tight ${
+                                                    status === 'active' ? 'text-brand-green' : 'text-brand-black'
+                                                }`}>
+                                                    {session.title}
+                                                </h5>
+                                                {status === 'completed' && <CheckCircle2 size={16} className="text-brand-green" />}
+                                                {session.title.toLowerCase().includes('award') && <Award size={16} className="text-brand-gold" />}
+                                            </div>
+                                            {session.description && (
+                                                <p className={`text-sm ${
+                                                    status === 'active' ? 'text-brand-green/80' : 'text-gray-500'
+                                                }`}>
+                                                    {session.description}
                                                 </p>
-                                                <span className="text-[0.65rem] font-semibold tracking-[0.24em] uppercase text-gray-400">
-                                                    {dayBlock.monthShort || 'FEB'} {dayBlock.date ?? index + 1}
-                                                </span>
-                                            </div>
-
-                                            <div className="flex items-baseline gap-4">
-                                                <span className="text-[4.75rem] md:text-[6rem] font-extrabold leading-none tracking-tight text-brand-gold group-hover:text-brand-green transition-transform duration-300 ease-out group-hover:scale-[1.03]">
-                                                    {dayBlock.date ?? index + 1}
-                                                </span>
-                                            </div>
-
-                                            <div className="mt-4 h-[4px] bg-brand-gold/20 group-hover:bg-brand-gold transition-colors duration-300" />
+                                            )}
                                         </div>
 
-                                        <div className="mt-5">
-                                            {dayBlock.theme && (
-                                                <h3 className="text-lg md:text-xl font-bold text-brand-black leading-snug tracking-[0.12em] uppercase mb-3 group-hover:text-brand-green transition-colors duration-300">
-                                                    {dayBlock.theme}
-                                                </h3>
-                                            )}
-
-                                            <div className="space-y-3">
-                                                {previewActivities.map((item, activityIndex) => (
-                                                    <div key={`${dayBlock.day}-${activityIndex}`} className="flex gap-3">
-                                                        <span className="mt-2 h-[1px] w-8 bg-brand-gold/60 group-hover:bg-brand-green/70 transition-colors duration-300" />
-                                                        <div>
-                                                            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-brand-gold mb-0.5">
-                                                                {item.time}
-                                                            </p>
-                                                            <p className="text-sm font-medium text-brand-black leading-tight">
-                                                                {item.title}
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                ))}
-
-                                                {hasMoreActivities && (
-                                                    <p className="pt-2 text-xs text-gray-500 italic">
-                                                        + {dayBlock.activities.length - previewActivities.length} more sessions, panels & exhibitions
-                                                    </p>
-                                                )}
-                                            </div>
+                                        <div className="hidden md:block">
+                                            <button className="p-2 text-gray-300 hover:text-brand-green transition-colors">
+                                                <ArrowRight size={18} />
+                                            </button>
                                         </div>
                                     </div>
-                                </article>
-                            </ScrollReveal>
-                        );
-                    })}
+                                );
+                            })}
+                        </div>
+                    </div>
                 </div>
 
-                <div className="flex justify-center mt-12">
+                {/* Footer */}
+                <div className="flex justify-center pt-8 mt-8">
                     <Button
                         href="/docs/tree-crops-summit-programme.pdf"
                         variant="primary"
                         size="large"
                         target="_blank"
                     >
-                        Download Full Programme (PDF)
+                        <span className="flex items-center space-x-2">
+                            <span>View Full Programme</span>
+                            <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                        </span>
                     </Button>
                 </div>
             </Container>

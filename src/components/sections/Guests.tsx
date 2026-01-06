@@ -218,7 +218,11 @@ export default function Guests() {
               <div className="md:w-3/5 p-8 md:p-12 lg:p-16 flex flex-col justify-center bg-white h-auto md:h-full relative overflow-y-auto">
                 <span className="text-green-700 font-semibold tracking-wider uppercase text-sm mb-2">
                    {/* Fallback title category mapping or static text */}
-                   {guests[currentSlide].badge === "TCDA Leadership" ? "Leadership" : "Distinguished Speaker"}
+                   {guests[currentSlide].badge === "TCDA Leadership" 
+                     ? "Leadership" 
+                     : guests[currentSlide].badge === "Distinguished Guest" 
+                       ? "Distinguished Guest" 
+                       : "Distinguished Speaker"}
                 </span>
                 <h3 className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4 md:mb-6 leading-tight">
                   {guests[currentSlide].name}
