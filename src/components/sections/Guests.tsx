@@ -120,7 +120,7 @@ export default function Guests() {
   const changeSlide = (n: number) => {
     setDirection(n);
     setCurrentSlide((prev) => {
-      let next = prev + n;
+      const next = prev + n;
       if (next >= guests.length) return 0;
       if (next < 0) return guests.length - 1;
       return next;

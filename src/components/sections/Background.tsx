@@ -37,7 +37,7 @@ const Background: React.FC = () => {
                 </h2>
                 <div className="space-y-6 text-lg md:text-xl text-white leading-relaxed max-w-4xl mx-auto mb-12">
                     <p className="drop-shadow-lg">
-                        The 1st Ghana Tree Crops Investment Summit (GTCIS) 2026 is a landmark event designed to position Ghana as a global powerhouse in the tree crop sector. Under the theme "Sustainable Growth Through Tree Crop Investments : Resetting and Building Ghana’s Green Economy", we aim to attract significant investment and modernize agriculture for economic transformation.
+                        The 1st Ghana Tree Crops Investment Summit (GTCIS) 2026 is a landmark event designed to position Ghana as a global powerhouse in the tree crop sector. Under the theme &quot;Sustainable Growth Through Tree Crop Investments : Resetting and Building Ghana&apos;s Green Economy&quot;, we aim to attract significant investment and modernize agriculture for economic transformation.
                     </p>
                 </div>
                 

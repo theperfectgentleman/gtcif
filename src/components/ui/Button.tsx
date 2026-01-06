@@ -9,6 +9,7 @@ type CommonProps = {
   size?: ButtonSize;
   className?: string;
   children: React.ReactNode;
+  disabled?: boolean;
 };
 
 type ButtonAsLink = CommonProps &

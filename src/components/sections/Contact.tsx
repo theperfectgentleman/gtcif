@@ -22,7 +22,7 @@ const Contact: React.FC = () => {
                                 <span className="text-brand-gold italic font-serif">Strategic Partnerships</span>
                             </h2>
                             <p className="text-gray-300 text-lg max-w-xl">
-                                Join us at the Accra International Conference Centre to be part of the $600M transformation of Ghana's tree crop sector.
+                                Join us at the Accra International Conference Centre to be part of the $600M transformation of Ghana&apos;s tree crop sector.
                             </p>
                         </div>
                         <div className="md:w-1/3 flex flex-col gap-4">
@@ -59,7 +59,7 @@ const Contact: React.FC = () => {
                                 </span>
                             </div>
                             <p className="text-gray-400 leading-relaxed">
-                                The definitive platform for investments in Ghana's tree crop sector. Paving the way for sustainable growth and industrial transformation.
+                                The definitive platform for investments in Ghana&apos;s tree crop sector. Paving the way for sustainable growth and industrial transformation.
                             </p>
                         </div>
 

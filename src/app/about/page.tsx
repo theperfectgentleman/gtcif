@@ -20,12 +20,12 @@ export default function AboutPage() {
                 <ScrollReveal>
                     <div className="grid md:grid-cols-2 gap-12 items-center">
                         <div>
-                            <h2 className="text-3xl font-bold text-gray-900 mb-6">Resetting Ghana's Agricultural Frontier</h2>
+                            <h2 className="text-3xl font-bold text-gray-900 mb-6">Resetting Ghana&apos;s Agricultural Frontier</h2>
                             <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                                Under the theme <span className="font-semibold text-green-700">"Sustainable Growth Through Tree Crop Investments : Resetting and Building Ghana’s Green Economy,"</span> this summit brings together the highest levels of government, traditional leadership, and global investors.
+                                Under the theme <span className="font-semibold text-green-700">&quot;Sustainable Growth Through Tree Crop Investments : Resetting and Building Ghana&apos;s Green Economy,&quot;</span> this summit brings together the highest levels of government, traditional leadership, and global investors.
                             </p>
                             <p className="text-lg text-gray-700 leading-relaxed">
-                                In alignment with the Government of Ghana's Resetting Agenda, GTCIS 2026 serves as the premier platform for the Agriculture for Economic Transformation Agenda (AETA). Led by the vision of His Excellency John Dramani Mahama, this summit is a strategic call to modernize agriculture, ensure national food security, and position Ghana as a global leader in high-value tree crop exports.
+                                In alignment with the Government of Ghana&apos;s Resetting Agenda, GTCIS 2026 serves as the premier platform for the Agriculture for Economic Transformation Agenda (AETA). Led by the vision of His Excellency John Dramani Mahama, this summit is a strategic call to modernize agriculture, ensure national food security, and position Ghana as a global leader in high-value tree crop exports.
                             </p>
                         </div>
                         <div className="bg-gray-100 p-8 rounded-2xl border-l-4 border-green-700">
