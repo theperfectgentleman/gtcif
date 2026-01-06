@@ -3,6 +3,7 @@
 import React from 'react';
 import { programme } from '../../data/programme';
 import Container from '../ui/Container';
+import Button from '../ui/Button';
 import { ScrollReveal } from '../ui/ScrollReveal';
 
 const Programme: React.FC = () => {
@@ -14,7 +15,7 @@ const Programme: React.FC = () => {
                         Event Programme
                     </h2>
                     <p className="text-sm text-gray-600 max-w-2xl mx-auto">
-                        A four-day journey across Ghana&apos;s key tree crop value chains — from opening ceremony to closing gala.
+                        A four-day journey across Ghana&apos;s key tree crop value chains -- from opening ceremony to closing gala.
                     </p>
                 </div>
 
@@ -84,6 +85,17 @@ const Programme: React.FC = () => {
                             </ScrollReveal>
                         );
                     })}
+                </div>
+
+                <div className="flex justify-center mt-12">
+                    <Button
+                        href="/docs/tree-crops-summit-programme.pdf"
+                        variant="primary"
+                        size="large"
+                        target="_blank"
+                    >
+                        Download Full Programme (PDF)
+                    </Button>
                 </div>
             </Container>
         </section>

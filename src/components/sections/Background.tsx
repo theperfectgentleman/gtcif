@@ -4,6 +4,7 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
 import Container from '../ui/Container';
+import Button from '../ui/Button';
 
 const Background: React.FC = () => {
     const ref = useRef(null);
@@ -34,16 +35,16 @@ const Background: React.FC = () => {
                 <h2 className="text-4xl md:text-5xl font-bold text-white mb-10 drop-shadow-lg">
                     Background of the Event
                 </h2>
-                <div className="space-y-8 text-xl md:text-2xl text-gray-200 font-medium leading-relaxed max-w-5xl mx-auto drop-shadow-md">
+                <div className="space-y-8 text-xl md:text-2xl text-gray-200 font-medium leading-relaxed max-w-4xl mx-auto drop-shadow-md mb-12">
                     <p>
-                        In line with the Government of Ghana’s Resetting Agenda, led by His Excellency John Dramani Mahama, the Tree Crops Development Authority (TCDA) seeks to highlight its commitment to the Government of Ghana’s Agriculture for Economic Transformation Agenda (AETA).
+                        The 1st Ghana Tree Crops Investment Summit (GTCIS) 2026 is a landmark event designed to position Ghana as a global powerhouse in the tree crop sector. Under the theme "Sustainable Growth Through Tree Crop Investments : Resetting and Building Ghana’s Green Economy", we aim to attract significant investment and modernize agriculture for economic transformation.
                     </p>
-                    <p>
-                        This event presents a unique opportunity to engage key stakeholders and attract new investment into the industry. The National Tree Crops Investment Summit aims to drive investments, raise awareness, promote the sector, and strengthen collaboration among diverse partners.
-                    </p>
-                    <p className="text-white font-semibold">
-                        Join us as we showcase the value and potential of tree crops as a significant contributor to Ghana’s economy.
-                    </p>
+                </div>
+                
+                <div className="flex justify-center">
+                    <Button href="/about" variant="primary" size="large" className="bg-brand-green hover:bg-green-700 text-white border-2 border-transparent hover:border-brand-gold">
+                        Read More
+                    </Button>
                 </div>
             </Container>
         </section>

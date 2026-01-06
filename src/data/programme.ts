@@ -144,7 +144,7 @@ export const programme = [
       {
         time: "10:30 AM - 11:30 AM",
         title: "Presentation",
-        description: "Financial Institutions’ Role in Sector Growth."
+        description: "Financial Institutions' Role in Sector Growth."
       },
       {
         time: "12:00 PM - 01:00 PM",

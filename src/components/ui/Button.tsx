@@ -7,22 +7,20 @@ type ButtonSize = 'small' | 'medium' | 'large';
 type CommonProps = {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  disabled?: boolean;
   className?: string;
   children: React.ReactNode;
 };
 
-type ButtonAsLink = CommonProps & {
-  href: string;
-  onClick?: never;
-  type?: never;
-};
+type ButtonAsLink = CommonProps &
+  React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+    href: string;
+    type?: never;
+  };
 
-type ButtonAsButton = CommonProps & {
-  href?: undefined;
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  type?: 'button' | 'submit' | 'reset';
-};
+type ButtonAsButton = CommonProps &
+  React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    href?: undefined;
+  };
 
 export type ButtonProps = ButtonAsLink | ButtonAsButton;
 
@@ -30,9 +28,10 @@ const Button: React.FC<ButtonProps> = (props) => {
   const {
     variant = 'primary',
     size = 'medium',
-    disabled = false,
     className = '',
     children,
+    disabled,
+    ...rest
   } = props;
 
   const baseStyles =
@@ -48,15 +47,19 @@ const Button: React.FC<ButtonProps> = (props) => {
     large: 'px-6 py-3 text-lg',
   };
 
-  const styles = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${disabled ? 'opacity-60 cursor-not-allowed' : ''} ${className}`;
+  const cssClasses = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${
+    disabled ? 'opacity-60 cursor-not-allowed' : ''
+  } ${className}`;
 
-  if (typeof props.href === 'string') {
+  if (props.href) {
+    const { href, ...linkProps } = props as ButtonAsLink;
     return (
       <Link
-        href={props.href}
-        className={styles}
+        href={href}
+        className={cssClasses}
+        {...linkProps}
         aria-disabled={disabled}
-        tabIndex={disabled ? -1 : 0}
+        tabIndex={disabled ? -1 : undefined}
       >
         {children}
       </Link>
@@ -65,10 +68,9 @@ const Button: React.FC<ButtonProps> = (props) => {
 
   return (
     <button
-      className={styles}
-      onClick={props.onClick}
-      type={props.type ?? 'button'}
+      className={cssClasses}
       disabled={disabled}
+      {...(rest as React.ButtonHTMLAttributes<HTMLButtonElement>)}
     >
       {children}
     </button>

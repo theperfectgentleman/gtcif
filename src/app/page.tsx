@@ -2,6 +2,7 @@ import React from 'react';
 import Hero from '../components/sections/Hero';
 import VenueDateTheme from '../components/sections/VenueDateTheme';
 import ThemeSection from '../components/sections/ThemeSection';
+import Guests from '../components/sections/Guests';
 import Background from '../components/sections/Background';
 import Audience from '../components/sections/Audience';
 import Outcomes from '../components/sections/Outcomes';
@@ -21,6 +22,10 @@ const HomePage = () => {
 
             <ScrollReveal width="100%">
                 <ThemeSection />
+            </ScrollReveal>
+            
+            <ScrollReveal width="100%">
+                <Guests />
             </ScrollReveal>
             
             <ScrollReveal width="100%">

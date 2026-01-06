@@ -1,13 +1,13 @@
 export const content = {
   hero: {
     title: "1st Ghana Tree Crops Investment Summit (GTCIS) 2026",
-    subtitle: "Ghana's Green Gold: Showcasing the Value and Potential of Tree Crops",
+    subtitle: "Sustainable Growth Through Tree Crop Investments : Resetting and Building Ghana’s Green Economy",
     buttonText: "Register Now",
   },
   eventDetails: {
     date: "February 17th - 20th, 2026",
     venue: "Accra International Conference Centre (AICC)",
-    theme: "Ghana's Green Gold: Showcasing the Value and Potential of Tree Crops as a Significant Contributor to Ghana's Economy",
+    theme: "Sustainable Growth Through Tree Crop Investments : Resetting and Building Ghana’s Green Economy",
   },
   background: {
     title: "Background of GTCIS",

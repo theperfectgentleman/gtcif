@@ -40,7 +40,7 @@ const Audience: React.FC = () => {
                     <div className="group relative overflow-hidden rounded-3xl bg-white p-8 shadow-md border border-gray-200 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:bg-brand-green-soft hover:border-brand-green">
                         <div className="mb-4 flex items-center gap-3">
                             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-secondary/10 ring-1 ring-secondary/30 text-secondary">
-                                <span className="text-2xl" aria-hidden="true">₵</span>
+                                <span className="text-2xl" aria-hidden="true">&#8373;</span>
                             </div>
                             <h3 className="text-xl font-semibold text-brand-black">Investors &amp; Finance</h3>
                         </div>

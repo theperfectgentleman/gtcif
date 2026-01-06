@@ -120,12 +120,12 @@ const Hero: React.FC = () => {
                         <p className="text-xs md:text-sm uppercase tracking-[0.28em] text-white/80 font-semibold">
                             Ghana Tree Crops Investment Summit
                         </p>
-                        <h1 className="mt-4 text-5xl md:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
-                            Agriculture is the <br />
-                            <span className="text-brand-green bg-white/10 px-3 py-1 rounded-md backdrop-blur-sm">Food Factory</span>
+                        <h1 className="mt-4 text-4xl md:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
+                            Powering the <br />
+                            <span className="text-brand-green bg-white/10 px-3 py-1 rounded-md backdrop-blur-sm">Green Revolution</span>
                         </h1>
-                        <p className="text-xl md:text-2xl text-gray-100 mb-10 max-w-xl leading-relaxed drop-shadow-md font-medium">
-                            Join us at the 1st Ghana Tree Crops Investment Summit to showcase the value and potential of tree crops.
+                        <p className="text-xl md:text-2xl text-gray-100 mb-10 max-w-3xl leading-relaxed drop-shadow-md font-medium">
+                            A strategic reset for sustainable economic prosperity.
                         </p>
                     </motion.div>
                     

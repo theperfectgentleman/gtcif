@@ -20,7 +20,7 @@ const Navbar = () => {
                         <Link href="/" className="no-underline text-gray-700 hover:text-brand-green font-semibold transition-colors duration-300 border-b-2 border-transparent hover:border-brand-gold pb-1">
                             Home
                         </Link>
-                        <Link href="#about" className="no-underline text-gray-700 hover:text-brand-green font-semibold transition-colors duration-300 border-b-2 border-transparent hover:border-brand-gold pb-1">
+                        <Link href="/about" className="no-underline text-gray-700 hover:text-brand-green font-semibold transition-colors duration-300 border-b-2 border-transparent hover:border-brand-gold pb-1">
                             About
                         </Link>
                         <Link href="#programme" className="no-underline text-gray-700 hover:text-brand-green font-semibold transition-colors duration-300 border-b-2 border-transparent hover:border-brand-gold pb-1">
