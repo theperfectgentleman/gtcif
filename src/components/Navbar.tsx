@@ -36,7 +36,7 @@ const Navbar = () => {
 
                     {/* CTA Button - Right Aligned */}
                     <div className="hidden md:flex items-center">
-                        <Button href="/register" variant="primary" size="medium" className="no-underline shadow-md hover:shadow-lg transition-all">
+                        <Button href="/register" variant="primary" size="medium" className="no-underline shadow-lg hover:shadow-xl transition-all font-bold bg-brand-green hover:bg-green-700 text-white px-6 py-2.5 transform hover:scale-105">
                             Register Now
                         </Button>
                     </div>

@@ -35,14 +35,14 @@ const Background: React.FC = () => {
                 <h2 className="text-4xl md:text-5xl font-bold text-white mb-10 drop-shadow-lg">
                     Background of the Event
                 </h2>
-                <div className="space-y-8 text-xl md:text-2xl text-gray-200 font-medium leading-relaxed max-w-4xl mx-auto drop-shadow-md mb-12">
-                    <p>
+                <div className="space-y-6 text-lg md:text-xl text-white leading-relaxed max-w-4xl mx-auto mb-12">
+                    <p className="drop-shadow-lg">
                         The 1st Ghana Tree Crops Investment Summit (GTCIS) 2026 is a landmark event designed to position Ghana as a global powerhouse in the tree crop sector. Under the theme "Sustainable Growth Through Tree Crop Investments : Resetting and Building Ghana’s Green Economy", we aim to attract significant investment and modernize agriculture for economic transformation.
                     </p>
                 </div>
                 
                 <div className="flex justify-center">
-                    <Button href="/about" variant="primary" size="large" className="bg-brand-green hover:bg-green-700 text-white border-2 border-transparent hover:border-brand-gold">
+                    <Button href="/about" variant="outline" size="large" className="border-2 border-white text-white hover:bg-white hover:text-brand-black px-10 py-4 rounded-md font-bold uppercase tracking-widest backdrop-blur-sm transition-all transform hover:-translate-y-1 no-underline">
                         Read More
                     </Button>
                 </div>

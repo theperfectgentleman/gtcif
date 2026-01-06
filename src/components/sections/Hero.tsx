@@ -8,8 +8,6 @@ import Button from '../ui/Button';
 
 const HERO_IMAGES = [
     '/gt_images/cashew1.jpg',
-    '/gt_images/cocoa1.jpg',
-    '/gt_images/cocoa2.jpg',
     '/gt_images/coconut1.jpg',
     '/gt_images/conference1.jpg',
     '/gt_images/conference2.jpg',
@@ -17,7 +15,6 @@ const HERO_IMAGES = [
     '/gt_images/conference4.jpg',
     '/gt_images/palm1.jpg',
     '/gt_images/palm2.jpg',
-    '/gt_images/conf6.jpg',
     '/gt_images/palm_drone.jpg',
 ];
 
@@ -117,14 +114,13 @@ const Hero: React.FC = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1] }}
                     >
-                        <p className="text-xs md:text-sm uppercase tracking-[0.28em] text-white/80 font-semibold">
+                        <p className="text-[10px] md:text-xs uppercase tracking-[0.28em] text-white/80 font-semibold">
                             Ghana Tree Crops Investment Summit
                         </p>
                         <h1 className="mt-4 text-4xl md:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
-                            Powering the <br />
                             <span className="text-brand-green bg-white/10 px-3 py-1 rounded-md backdrop-blur-sm">Green Revolution</span>
                         </h1>
-                        <p className="text-xl md:text-2xl text-gray-100 mb-10 max-w-3xl leading-relaxed drop-shadow-md font-medium">
+                        <p className="text-sm md:text-base text-gray-100 mb-10 max-w-3xl leading-relaxed font-medium">
                             A strategic reset for sustainable economic prosperity.
                         </p>
                     </motion.div>

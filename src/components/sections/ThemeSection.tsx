@@ -24,7 +24,7 @@ const ThemeSection: React.FC = () => {
                             href="/register"
                             variant="primary"
                             size="large"
-                            className="px-10 py-4 rounded-md font-bold uppercase tracking-widest shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 no-underline"
+                            className="bg-brand-green border-brand-green text-white px-10 py-4 rounded-md font-bold uppercase tracking-widest shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-1 no-underline"
                         >
                             Register Now
                         </Button>
