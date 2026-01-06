@@ -87,7 +87,7 @@ const VenueDateTheme = () => {
 
                     {/* Exhibitors */}
                     <StatItem 
-                        value={450} 
+                        value={100} 
                         label="Exhibitors" 
                         suffix="+" 
                         delay={400}

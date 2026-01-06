@@ -43,9 +43,9 @@ const guests = [
     name: "H.E. John Dramani Mahama",
     title: "President of the Republic of Ghana",
     badge: "Special Guest Speaker",
-    description: "Leading the \"Resetting Agenda\" for Ghana's agricultural economic transformation and delivering the keynote address on Day 1.",
-    session: "Opening Ceremony -- February 17, 2026",
-    sessionLabel: "Session Date",
+    description: "Resetting Ghana's agricultural landscape to build a resilient green economy and drive national prosperity.",
+    session: "Main Keynote Address (Day 1 — 10:45 AM)",
+    sessionLabel: "Speaking",
     image: "/images/guests/president.png",
     color: "bg-tcda-green" 
   },
@@ -53,8 +53,8 @@ const guests = [
     name: "H.R.M. Otumfuo Osei Tutu (II)",
     title: "Asantehene",
     badge: "Special Guest of Honour",
-    description: "Gracing the summit as the Special Guest of Honour and officiating the grand opening of the exhibition at the AICC.",
-    session: "Official Opening Ceremony -- February 17, 2026",
+    description: "Honoring our tradition of land stewardship while presiding over the next chapter of Ghana's green growth.",
+    session: "Official Opening of the Event (Day 1 — 11:25 AM)",
     sessionLabel: "Presence",
     image: "/images/guests/otumfour.png",
     bgBadge: "bg-yellow-600"
@@ -62,36 +62,54 @@ const guests = [
   {
     name: "Hon. Dr. Cassiel Ato Baah Forson",
     title: "Minister for Finance",
-    badge: "Keynote Speaker",
-    description: "Discussing fiscal strategies and funding mechanisms to drive USD 100M investment into each of the six tree crop value chains.",
-    session: "Closing Ceremony/Gala Night -- February 20, 2026",
-    sessionLabel: "Gala Address",
+    badge: "Special Dignitary",
+    description: "Implementing fiscal frameworks to unlock major investments for Ghana's strategic tree crop value chains.",
+    session: "Fiscal Policy & Investment",
+    sessionLabel: "Presence",
     image: "/images/guests/forson.png"
   },
   {
     name: "Hon. Dr. Eric Opoku",
     title: "Minister for Food and Agriculture",
     badge: "Keynote Speaker",
-    description: "Addressing the modernization of agriculture and promoting agri-business to ensure food security and export growth.",
-    session: "Value Chain Keynote -- February 18, 2026",
-    sessionLabel: "Keynote",
-    image: "/images/guests/eric opoku.png"
+    description: "Modernizing agriculture through green investments to ensure food security and sustainable job creation.",
+    session: "Ministerial Keynote Address (Day 2 — 09:50 AM)",
+    sessionLabel: "Speaking",
+    image: "/images/guests/eric_opoku_new.png"
   },
   {
     name: "Hon. Elizabeth Ofosu-Adjare",
     title: "Minister for Trade, Agribusiness & Industry",
     badge: "Keynote Speaker",
-    description: "Highlighting trade opportunities and industrial processing potential within Ghana's diversified tree crop sector.",
-    session: "Closing Ceremony/Gala Night -- February 20, 2026",
-    sessionLabel: "Gala Address",
+    description: "Transforming the tree crop sector into a cornerstone of industrial agribusiness and global green trade.",
+    session: "Ministerial Keynote Address (Day 2 — 09:50 AM)",
+    sessionLabel: "Speaking",
     image: "/images/guests/elizabeth.png"
+  },
+  {
+    name: "Hon. Samuel Okudzeto Ablakwa",
+    title: "Minister for Foreign Affairs",
+    badge: "Special Dignitary",
+    description: "Opening global markets and strengthening international partnerships to position Ghana's green economy on the world stage.",
+    session: "International Trade & Partnerships",
+    sessionLabel: "Presence",
+    image: "/images/guests/samuel.png"
+  },
+  {
+    name: "Hon. Dr. Godfred Seidu Jasaw (MP)",
+    title: "Chairman, Food, Agriculture and Cocoa Affairs Committee",
+    badge: "Special Dignitary",
+    description: "Championing legislative frameworks that empower farmers and secure the sustainable future of Ghana's tree crops.",
+    session: "Legislative Framework & Policy",
+    sessionLabel: "Presence",
+    image: "/images/guests/godfred.png"
   },
   {
     name: "Prof. William Oduro",
     title: "Chairman, Tree Crops Development Authority",
     badge: "TCDA Leadership",
-    description: "Providing strategic oversight for the sustainable development of Ghana's oil palm, cashew, mango, shea, rubber, and coconut industries.",
-    session: "Opening Remarks -- February 20, 2026",
+    description: "Developing a highly diversified and globally competitive tree crop industry for Ghana.",
+    session: "Opening Remarks (Day 4 — 09:00 AM)",
     sessionLabel: "Speaking",
     image: "/images/guests/william.png"
   },
@@ -99,9 +117,9 @@ const guests = [
     name: "Dr. Andy Osei Okrah",
     title: "C.E.O., Tree Crops Development Authority",
     badge: "TCDA Leadership",
-    description: "Driving the Authority's mission to achieve long-term commercial productivity and global competitiveness for Ghanaian tree crops.",
-    session: "Purpose of Gathering -- February 17, 2026",
-    sessionLabel: "Presentation",
+    description: "Turning agricultural research into commercial success to boost the national economy and well-being.",
+    session: "Purpose of Gathering Address (Day 1 — 10:10 AM)",
+    sessionLabel: "Speaking",
     image: "/images/guests/andy.png"
   }
 ];
