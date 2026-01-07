@@ -97,5 +97,26 @@ export async function getDb() {
       }
   }
 
+  // Check for users table and create/seed if necessary
+  const userColumns = await db.all('PRAGMA table_info(users)');
+  if (userColumns.length === 0) {
+      await db.exec(`
+        CREATE TABLE users (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          username TEXT UNIQUE NOT NULL,
+          password TEXT NOT NULL,
+          role TEXT NOT NULL DEFAULT 'media',
+          createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+      
+      // Seed default admin
+      await db.run(
+          'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
+          'admin', 'pass', 'admin'
+      );
+      console.log('Users table created and seeded with default admin.');
+  }
+
   return db;
 }

@@ -1,16 +1,30 @@
 import { NextResponse } from 'next/server';
+import { getDb } from '../../../../lib/db';
 
 export async function POST(request: Request) {
     const body = await request.json();
     const { username, password } = body;
 
-    if (username === 'admin' && password === 'pass') {
-        const response = NextResponse.json({ success: true });
-        response.cookies.set('admin_session', 'true', {
+    const db = await getDb();
+    const user = await db.get('SELECT * FROM users WHERE username = ? AND password = ?', username, password);
+
+    if (user) {
+        const response = NextResponse.json({ success: true, role: user.role, username: user.username });
+        const oneDay = 60 * 60 * 24;
+
+        response.cookies.set('admin_session', user.username, {
             httpOnly: true,
             path: '/',
-            maxAge: 60 * 60 * 24, // 1 day
+            maxAge: oneDay,
         });
+
+        // This cookie allows client to easily check role for UI
+        response.cookies.set('admin_role', user.role, {
+            httpOnly: false, 
+            path: '/',
+            maxAge: oneDay,
+        });
+
         return response;
     }
 

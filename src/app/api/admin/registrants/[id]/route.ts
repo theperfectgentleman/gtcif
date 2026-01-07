@@ -7,7 +7,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     const cookieStore = await cookies();
     const session = cookieStore.get('admin_session');
 
-    if (!session || session.value !== 'true') {
+    if (!session) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
