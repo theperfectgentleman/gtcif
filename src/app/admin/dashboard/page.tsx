@@ -169,7 +169,7 @@ const AdminDashboard = () => {
     const handleRoleChange = async (userId: number, newRole: string) => {
         try {
             const res = await fetch('/api/admin/users', {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     id: userId,
