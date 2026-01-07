@@ -91,6 +91,7 @@ export async function POST(request: Request) {
             console.error('Error sending email:', emailError);
             // We still return success for the registration, but log the email error
         }
+        }
 
         return NextResponse.json({ message: 'Registration successful!' }, { status: 201 });
 

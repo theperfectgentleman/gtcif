@@ -39,9 +39,9 @@ const RegisterPage = () => {
                                     <p className="text-lg font-bold text-brand-black">February 17-20, 2026</p>
                                 </div>
                             </div>
-                            <p className="text-sm text-gray-500">
+                            {/* <p className="text-sm text-gray-500">
                                 A confirmation email has been sent to your provided email address.
-                            </p>
+                            </p> */}
                         </div>
                         
                         <div className="flex justify-center">

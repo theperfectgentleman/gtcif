@@ -11,12 +11,9 @@ import {
   MapPin, 
   TrendingUp,
   Activity,
-  Zap,
   CalendarDays,
-  ExternalLink,
   ChevronRight,
-  Award,
-  Users
+  Award
 } from 'lucide-react';
 
 const Programme: React.FC = () => {
