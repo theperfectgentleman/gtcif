@@ -37,7 +37,7 @@ export async function POST(request: Request) {
             username, password, newRole
         );
         return NextResponse.json({ success: true });
-    } catch (e: any) {
+    } catch {
          // This works for sqlite 'unique' error usually, but message format depends on driver version
          return NextResponse.json({ success: false, error: 'Could not create user. Username might exist.' }, { status: 400 });
     }
@@ -65,7 +65,7 @@ export async function PUT(request: Request) {
             password, id
         );
         return NextResponse.json({ success: true });
-    } catch (e: any) {
+    } catch {
         return NextResponse.json({ success: false, error: 'Could not update password.' }, { status: 500 });
     }
 }

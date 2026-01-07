@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Users, LayoutDashboard, FileText, UserPlus, LogOut, Search, Printer, Key } from 'lucide-react';
-import Container from '../../../components/ui/Container';
 import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 import Modal from '../../../components/ui/Modal';
@@ -122,7 +121,7 @@ const AdminDashboard = () => {
             } else {
                 setUserError(data.error || 'Failed to create user');
             }
-        } catch (err) {
+        } catch {
             setUserError('An error occurred');
         }
     };
@@ -162,7 +161,7 @@ const AdminDashboard = () => {
             } else {
                 setResetError('Failed to update password');
             }
-        } catch (err) {
+        } catch {
             setResetError('An error occurred');
         }
     };
@@ -398,6 +397,7 @@ const AdminDashboard = () => {
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
                         <Input
+                            name="newPassword"
                             type="password"
                             value={resetPassword}
                             onChange={(e) => setResetPassword(e.target.value)}
@@ -407,6 +407,7 @@ const AdminDashboard = () => {
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
                         <Input
+                            name="confirmPassword"
                             type="password"
                             value={resetConfirm}
                             onChange={(e) => setResetConfirm(e.target.value)}
