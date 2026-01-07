@@ -3,6 +3,24 @@
 import React, { useState } from 'react';
 import Input from './ui/Input';
 import Button from './ui/Button';
+import { 
+    User, 
+    Mail, 
+    Phone, 
+    Building2, 
+    Briefcase, 
+    Globe, 
+    MapPin, 
+    Calendar,
+    CheckCircle2,
+    Sprout,
+    AlertCircle,
+    X
+} from 'lucide-react';
+
+// Event start date: Feb 17, 2026
+const EVENT_START_DATE = new Date('2026-02-17T00:00:00');
+const FIELD_VISIT_DEADLINE = new Date(EVENT_START_DATE.getTime() - 5 * 24 * 60 * 60 * 1000);
 
 const COUNTRIES = [
     'Afghanistan',
@@ -225,6 +243,17 @@ const FIELD_VISIT_LOCATIONS = [
 ];
 
 const JOB_TITLE_OPTIONS = [
+    'Government Appointee',
+    'Minister',
+    'Deputy Minister',
+    'Member of Parliament (MP)',
+    'District Chief Executive (DCE)',
+    'Municipal Chief Executive (MCE)',
+    'Metropolitan Chief Executive (MCE)',
+    'Chief Director',
+    'Director General',
+    'Assembly Member',
+    'Permanent Secretary',
     'Programme Officer',
     'Program Officer',
     'Project Officer',
@@ -301,6 +330,9 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
 
     const [errors, setErrors] = useState<Errors>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+    
+    // Check if field visit registration is closed
+    const isFieldVisitClosed = new Date() > FIELD_VISIT_DEADLINE;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
@@ -323,6 +355,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
 
     const handleLocationSelect = (locationId: string) => {
         setFormData(prev => ({ ...prev, fieldVisitLocation: locationId }));
+    };
+
+    const clearCountry = () => {
+        setFormData(prev => ({ ...prev, country: '' }));
     };
 
     const validate = (): Errors => {
@@ -379,239 +415,397 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 bg-white/80 backdrop-blur-sm rounded-lg shadow-lg">
-            <h2 className="text-2xl font-bold text-brand-green mb-6 text-center">Conference Registration</h2>
-            
-            {errors.submit && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-md">
-                    {errors.submit}
-                </div>
-            )}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Title */}
-                <div className="w-full">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                    <select
-                        name="title"
-                        value={formData.title}
-                        onChange={handleChange}
-                        className="w-full border border-gray-300 rounded-md p-2 bg-white/90 focus:outline-none focus:ring-2 focus:ring-brand-gold"
-                    >
-                        <option value="">Select Title</option>
-                        <option value="Mr">Mr</option>
-                        <option value="Ms">Ms</option>
-                        <option value="Mrs">Mrs</option>
-                        <option value="Dr">Dr</option>
-                        <option value="Prof">Prof</option>
-                        <option value="Hon">Hon</option>
-                    </select>
-                </div>
-
-                {/* Empty div to balance grid if needed, or just span full width for some */}
-                <div className="hidden md:block"></div>
-
-                {/* First Name */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">First Name *</label>
-                    <Input
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleChange}
-                        error={errors.firstName}
-                        placeholder="First Name"
-                        required
-                    />
-                </div>
-
-                {/* Last Name */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Last Name *</label>
-                    <Input
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                        error={errors.lastName}
-                        placeholder="Last Name"
-                        required
-                    />
-                </div>
-
-                {/* Email */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                    <Input
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        error={errors.email}
-                        placeholder="john.doe@example.com"
-                    />
-                </div>
-
-                {/* Phone */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
-                    <Input
-                        name="phone"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        error={errors.phone}
-                        placeholder="+233 20 123 4567"
-                        required
-                    />
-                </div>
-
-                {/* Organization */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Organization / Company *</label>
-                    <Input
-                        name="organization"
-                        value={formData.organization}
-                        onChange={handleChange}
-                        error={errors.organization}
-                        placeholder="Organization Name"
-                        required
-                    />
-                </div>
-
-                {/* Job Title */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Job Title</label>
-                    <div className="w-full">
-                        <input
-                            name="jobTitle"
-                            value={formData.jobTitle}
-                            onChange={handleChange}
-                            placeholder="Select or type your role"
-                            list="jobTitle-options"
-                            className="w-full border rounded-md p-2 bg-white/90 focus:outline-none focus:ring-2 focus:ring-brand-gold border-gray-300"
-                        />
-                        <datalist id="jobTitle-options">
-                            {JOB_TITLE_OPTIONS.map((title) => (
-                                <option key={title} value={title} />
-                            ))}
-                        </datalist>
-                    </div>
-                </div>
-
-                {/* Country */}
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Country *</label>
-                    <div className="w-full">
-                        <input
-                            name="country"
-                            value={formData.country}
-                            onChange={handleChange}
-                            required
-                            list="country-options"
-                            placeholder="Select or type country"
-                            className={`w-full border rounded-md p-2 bg-white/90 focus:outline-none focus:ring-2 focus:ring-brand-gold ${
-                                errors.country ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                            aria-invalid={!!errors.country}
-                            aria-describedby={errors.country ? 'country-error' : undefined}
-                        />
-                        <datalist id="country-options">
-                            {COUNTRIES.map((c) => (
-                                <option key={c} value={c} />
-                            ))}
-                        </datalist>
-                        {errors.country ? (
-                            <p id="country-error" className="mt-1 text-sm text-red-600">
-                                {errors.country}
-                            </p>
-                        ) : null}
+        <div id="register-form" className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden max-w-5xl mx-auto">
+            {/* Header */}
+            <div className="bg-gray-50 border-b border-gray-100 p-6 md:p-10">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <div className="inline-flex items-center space-x-2 bg-brand-green/10 text-brand-green px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-3">
+                            <Calendar size={12} />
+                            <span>Registration</span>
+                        </div>
+                        <h2 className="text-2xl md:text-3xl font-black text-brand-black tracking-tight leading-tight">
+                            Confirm Your Attendance
+                        </h2>
+                        <p className="text-sm text-gray-500 font-medium mt-2">
+                            Secure your spot at GTCIS 2026. Please fill in your details below.
+                        </p>
                     </div>
                 </div>
             </div>
 
-            {/* Field Visit Section */}
-            <div className="mt-8 border-t pt-6">
-                <h3 className="text-xl font-semibold text-brand-green mb-4">Field Visit Selection (21st January)</h3>
-                
-                <div className="mb-6">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Would you like to participate in the field visit?
-                    </label>
-                    <div className="flex gap-4">
-                        <label className="flex items-center space-x-2 cursor-pointer">
-                            <input
-                                type="radio"
-                                name="fieldVisit_yes"
-                                checked={formData.fieldVisit === true}
-                                onChange={() => handleFieldVisitChange(true)}
-                                className="w-4 h-4 text-brand-green focus:ring-brand-green border-gray-300"
-                            />
-                            <span>Yes, I will participate</span>
-                        </label>
-                        <label className="flex items-center space-x-2 cursor-pointer">
-                            <input
-                                type="radio"
-                                name="fieldVisit_no"
-                                checked={formData.fieldVisit === false}
-                                onChange={() => handleFieldVisitChange(false)}
-                                className="w-4 h-4 text-brand-green focus:ring-brand-green border-gray-300"
-                            />
-                            <span>No, I won&apos;t participate</span>
-                        </label>
-                    </div>
-                </div>
-
-                {formData.fieldVisit && (
-                    <div className="space-y-4">
-                        <p className="text-sm text-gray-600 mb-4">Please select one location to visit:</p>
-                        {errors.fieldVisitLocation && (
-                            <p className="text-red-600 text-sm mb-2">{errors.fieldVisitLocation}</p>
-                        )}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {FIELD_VISIT_LOCATIONS.map((loc) => (
-                                <div
-                                    key={loc.id}
-                                    onClick={() => handleLocationSelect(loc.id)}
-                                    className={`cursor-pointer rounded-lg border-2 p-4 transition-all hover:shadow-md ${
-                                        formData.fieldVisitLocation === loc.id
-                                            ? 'border-brand-green bg-green-50 ring-2 ring-brand-green ring-opacity-50'
-                                            : 'border-gray-200 bg-white hover:border-brand-green/50'
-                                    }`}
-                                >
-                                    <div className="flex flex-col h-full">
-                                        <div className="font-bold text-lg text-gray-800 mb-2">{loc.name}</div>
-                                        <div className="text-sm text-gray-600 mb-1">
-                                            <span className="font-semibold">Crop:</span> {loc.crop}
-                                        </div>
-                                        <div className="text-sm text-gray-600">
-                                            <span className="font-semibold">Location:</span> {loc.location}
-                                        </div>
-                                        <div className="mt-4 flex justify-end">
-                                            <div className={`w-4 h-4 rounded-full border border-gray-400 flex items-center justify-center ${
-                                                formData.fieldVisitLocation === loc.id ? 'bg-brand-green border-brand-green' : ''
-                                            }`}>
-                                                {formData.fieldVisitLocation === loc.id && (
-                                                    <div className="w-2 h-2 rounded-full bg-white" />
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+            <form onSubmit={handleSubmit} className="p-6 md:p-10">
+                {errors.submit && (
+                    <div className="mb-8 p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl flex items-start gap-3">
+                        <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+                        <div>
+                            <p className="font-bold text-sm">Registration Failed</p>
+                            <p className="text-sm opacity-90">{errors.submit}</p>
                         </div>
                     </div>
                 )}
-            </div>
 
-            <div className="mt-8 flex justify-center">
-                <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full md:w-1/3"
-                >
-                    {isSubmitting ? 'Registering...' : 'Register Now'}
-                </Button>
-            </div>
-        </form>
+                <div className="space-y-8">
+                    {/* Personal Details Section */}
+                    <div>
+                        <div className="flex items-center space-x-2 mb-6">
+                            <div className="bg-brand-green/5 p-2 rounded-lg text-brand-green">
+                                <User size={20} />
+                            </div>
+                            <h3 className="text-lg font-bold text-brand-black uppercase tracking-tight">Personal Details</h3>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            {/* Title */}
+                            <div className="md:col-span-2">
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Title</label>
+                                <div className="relative">
+                                    <select
+                                        name="title"
+                                        value={formData.title}
+                                        onChange={handleChange}
+                                        className="w-full h-[50px] px-4 rounded-xl border border-gray-200 bg-gray-50 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all appearance-none"
+                                    >
+                                        <option value="">Select</option>
+                                        <option value="Mr">Mr</option>
+                                        <option value="Ms">Ms</option>
+                                        <option value="Mrs">Mrs</option>
+                                        <option value="Dr">Dr</option>
+                                        <option value="Prof">Prof</option>
+                                        <option value="Hon">Hon</option>
+                                    </select>
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* First Name */}
+                            <div className="md:col-span-5">
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">First Name <span className="text-red-500">*</span></label>
+                                <input
+                                    name="firstName"
+                                    value={formData.firstName}
+                                    onChange={handleChange}
+                                    placeholder="Enter your first name"
+                                    className={`w-full h-[50px] px-4 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${
+                                        errors.firstName 
+                                        ? 'border-red-300 focus:ring-red-100 focus:border-red-500' 
+                                        : 'border-gray-200 focus:ring-brand-green/20 focus:border-brand-green'
+                                    }`}
+                                />
+                                {errors.firstName && <p className="text-xs text-red-500 font-bold mt-1">{errors.firstName}</p>}
+                            </div>
+
+                            {/* Last Name */}
+                            <div className="md:col-span-5">
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Last Name <span className="text-red-500">*</span></label>
+                                <input
+                                    name="lastName"
+                                    value={formData.lastName}
+                                    onChange={handleChange}
+                                    placeholder="Enter your last name"
+                                    className={`w-full h-[50px] px-4 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${
+                                        errors.lastName 
+                                        ? 'border-red-300 focus:ring-red-100 focus:border-red-500' 
+                                        : 'border-gray-200 focus:ring-brand-green/20 focus:border-brand-green'
+                                    }`}
+                                />
+                                {errors.lastName && <p className="text-xs text-red-500 font-bold mt-1">{errors.lastName}</p>}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="w-full h-px bg-gray-100"></div>
+
+                    {/* Contact Info */}
+                    <div>
+                        <div className="flex items-center space-x-2 mb-6">
+                            <div className="bg-brand-green/5 p-2 rounded-lg text-brand-green">
+                                <Mail size={20} />
+                            </div>
+                            <h3 className="text-lg font-bold text-brand-black uppercase tracking-tight">Contact Information</h3>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Email */}
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Email Address</label>
+                                <div className="relative">
+                                    <input
+                                        name="email"
+                                        type="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        placeholder="john.doe@example.com"
+                                        className={`w-full h-[50px] pl-11 pr-4 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${
+                                            errors.email 
+                                            ? 'border-red-300 focus:ring-red-100 focus:border-red-500' 
+                                            : 'border-gray-200 focus:ring-brand-green/20 focus:border-brand-green'
+                                        }`}
+                                    />
+                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                </div>
+                                {errors.email && <p className="text-xs text-red-500 font-bold mt-1">{errors.email}</p>}
+                            </div>
+
+                            {/* Phone */}
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Phone Number <span className="text-red-500">*</span></label>
+                                <div className="relative">
+                                    <input
+                                        name="phone"
+                                        type="tel"
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        placeholder="+233 20 123 4567"
+                                        className={`w-full h-[50px] pl-11 pr-4 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${
+                                            errors.phone 
+                                            ? 'border-red-300 focus:ring-red-100 focus:border-red-500' 
+                                            : 'border-gray-200 focus:ring-brand-green/20 focus:border-brand-green'
+                                        }`}
+                                    />
+                                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                </div>
+                                {errors.phone && <p className="text-xs text-red-500 font-bold mt-1">{errors.phone}</p>}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="w-full h-px bg-gray-100"></div>
+
+                    {/* Professional Details */}
+                    <div>
+                        <div className="flex items-center space-x-2 mb-6">
+                            <div className="bg-brand-green/5 p-2 rounded-lg text-brand-green">
+                                <Briefcase size={20} />
+                            </div>
+                            <h3 className="text-lg font-bold text-brand-black uppercase tracking-tight">Professional Details</h3>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            {/* Organization */}
+                            <div className="md:col-span-6">
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Organization <span className="text-red-500">*</span></label>
+                                <div className="relative">
+                                    <input
+                                        name="organization"
+                                        value={formData.organization}
+                                        onChange={handleChange}
+                                        placeholder="Company or Organization Name"
+                                        className={`w-full h-[50px] pl-11 pr-4 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${
+                                            errors.organization 
+                                            ? 'border-red-300 focus:ring-red-100 focus:border-red-500' 
+                                            : 'border-gray-200 focus:ring-brand-green/20 focus:border-brand-green'
+                                        }`}
+                                    />
+                                    <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                </div>
+                                {errors.organization && <p className="text-xs text-red-500 font-bold mt-1">{errors.organization}</p>}
+                            </div>
+
+                            {/* Job Title */}
+                            <div className="md:col-span-6">
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Job Title</label>
+                                <div className="relative">
+                                    <input
+                                        name="jobTitle"
+                                        value={formData.jobTitle}
+                                        onChange={handleChange}
+                                        placeholder="Select or type your role"
+                                        list="jobTitle-options"
+                                        className="w-full h-[50px] pl-11 pr-4 rounded-xl border border-gray-200 bg-gray-50 font-medium focus:outline-none focus:ring-2 focus:ring-brand-green/20 focus:border-brand-green transition-all"
+                                    />
+                                    <datalist id="jobTitle-options">
+                                        {JOB_TITLE_OPTIONS.map((title) => (
+                                            <option key={title} value={title} />
+                                        ))}
+                                    </datalist>
+                                    <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                </div>
+                            </div>
+
+                            {/* Country */}
+                            <div className="md:col-span-12">
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Country <span className="text-red-500">*</span></label>
+                                <div className="relative">
+                                    <input
+                                        name="country"
+                                        value={formData.country}
+                                        onChange={handleChange}
+                                        required
+                                        list="country-options"
+                                        placeholder="Select or type country"
+                                        className={`w-full h-[50px] pl-11 pr-10 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${
+                                            errors.country 
+                                            ? 'border-red-300 focus:ring-red-100 focus:border-red-500' 
+                                            : 'border-gray-200 focus:ring-brand-green/20 focus:border-brand-green'
+                                        }`}
+                                    />
+                                    <datalist id="country-options">
+                                        {COUNTRIES.map((c) => (
+                                            <option key={c} value={c} />
+                                        ))}
+                                    </datalist>
+                                    <Globe className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                    {formData.country && (
+                                        <button
+                                            type="button"
+                                            onClick={clearCountry}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-200 transition-colors"
+                                            aria-label="Clear country"
+                                        >
+                                            <X size={16} />
+                                        </button>
+                                    )}
+                                </div>
+                                {errors.country && <p className="text-xs text-red-500 font-bold mt-1">{errors.country}</p>}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="w-full h-px bg-gray-100"></div>
+
+                    {/* Field Visit Section */}
+                    <div>
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                            <div className="flex items-center space-x-2">
+                                <div className="bg-brand-green/5 p-2 rounded-lg text-brand-green">
+                                    <Sprout size={20} />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-bold text-brand-black uppercase tracking-tight">Field Visit</h3>
+                                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">January 21st, 2026</p>
+                                </div>
+                            </div>
+                            
+                            {/* Toggle Switch */}
+                            {!isFieldVisitClosed && (
+                                <div className="flex bg-gray-100 p-1 rounded-xl">
+                                    <button
+                                        type="button"
+                                        onClick={() => handleFieldVisitChange(false)}
+                                        className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${
+                                            !formData.fieldVisit 
+                                            ? 'bg-white text-gray-800 shadow-sm' 
+                                            : 'text-gray-500 hover:text-gray-700'
+                                        }`}
+                                    >
+                                        Not Attending
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleFieldVisitChange(true)}
+                                        className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${
+                                            formData.fieldVisit 
+                                            ? 'bg-brand-green text-white shadow-sm' 
+                                            : 'text-gray-500 hover:text-gray-700'
+                                        }`}
+                                    >
+                                        I Will Attend
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        {isFieldVisitClosed ? (
+                            <div className="bg-orange-50 border border-orange-100 rounded-2xl p-6 flex items-start gap-4">
+                                <div className="bg-orange-100 text-orange-600 p-2 rounded-lg shrink-0">
+                                    <AlertCircle size={20} />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-orange-900 mb-1">Registration Closed</h4>
+                                    <p className="text-sm text-orange-800/80 leading-relaxed">
+                                        Registration for field visits ended on <span className="font-bold">{FIELD_VISIT_DEADLINE.toLocaleDateString()}</span> to allow for necessary logistical arrangements.
+                                    </p>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className={`transition-all duration-300 ${formData.fieldVisit ? 'opacity-100' : 'opacity-40 pointer-events-none grayscale'}`}>
+                                <p className="text-sm font-medium text-gray-600 mb-6">
+                                    Select one of the following locations to visit. Transportation will be provided.
+                                </p>
+                                
+                                {errors.fieldVisitLocation && formData.fieldVisit && (
+                                    <p className="text-xs font-bold text-red-500 uppercase tracking-wide mb-4 flex items-center">
+                                        <AlertCircle size={12} className="mr-1" />
+                                        Please select a location
+                                    </p>
+                                )}
+
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    {FIELD_VISIT_LOCATIONS.map((loc) => (
+                                        <div
+                                            key={loc.id}
+                                            onClick={() => formData.fieldVisit && handleLocationSelect(loc.id)}
+                                            className={`relative group cursor-pointer rounded-2xl border transition-all duration-300 p-6 flex flex-col h-full ${
+                                                formData.fieldVisitLocation === loc.id && formData.fieldVisit
+                                                    ? 'bg-white border-brand-green ring-2 ring-brand-green/10 shadow-lg translate-y-[-4px]'
+                                                    : 'bg-white border-gray-200 hover:border-brand-green/50 hover:shadow-md hover:translate-y-[-2px]'
+                                            }`}
+                                        >
+                                            <div className="flex justify-between items-start mb-4">
+                                                <div className={`p-2 rounded-xl transition-colors ${
+                                                    formData.fieldVisitLocation === loc.id && formData.fieldVisit
+                                                    ? 'bg-brand-green text-white'
+                                                    : 'bg-gray-100 text-gray-500 group-hover:bg-brand-green/10 group-hover:text-brand-green'
+                                                }`}>
+                                                    <Sprout size={20} />
+                                                </div>
+                                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+                                                    formData.fieldVisitLocation === loc.id && formData.fieldVisit
+                                                    ? 'border-brand-green bg-brand-green text-white'
+                                                    : 'border-gray-200 group-hover:border-brand-green/50'
+                                                }`}>
+                                                    {formData.fieldVisitLocation === loc.id && formData.fieldVisit && <CheckCircle2 size={14} />}
+                                                </div>
+                                            </div>
+                                            
+                                            <h4 className="font-bold text-lg text-brand-black leading-tight mb-2 group-hover:text-brand-green transition-colors">
+                                                {loc.name}
+                                            </h4>
+                                            
+                                            <div className="mt-auto space-y-2 pt-4">
+                                                <div className="flex items-center text-xs font-medium text-gray-500">
+                                                    <Sprout size={14} className="mr-2 opacity-70" />
+                                                    <span className="uppercase tracking-wider mr-2 opacity-50">Focus:</span>
+                                                    <span className="text-brand-black font-bold">{loc.crop}</span>
+                                                </div>
+                                                <div className="flex items-center text-xs font-medium text-gray-500">
+                                                    <MapPin size={14} className="mr-2 opacity-70" />
+                                                    <span className="uppercase tracking-wider mr-2 opacity-50">Loc:</span>
+                                                    <span className="text-brand-black font-bold">{loc.location}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                <div className="mt-12 pt-8 border-t border-gray-100 flex justify-center">
+                    <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full md:w-auto min-w-[300px] h-[56px] text-base"
+                    >
+                        {isSubmitting ? (
+                            <div className="flex items-center justify-center space-x-2">
+                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                <span>Processing Registration...</span>
+                            </div>
+                        ) : (
+                            <div className="flex items-center justify-center space-x-2">
+                                <span>Confirm Registration</span>
+                                <CheckCircle2 size={20} />
+                            </div>
+                        )}
+                    </Button>
+                </div>
+            </form>
+        </div>
     );
 };
 
