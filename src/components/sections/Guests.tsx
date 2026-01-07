@@ -111,7 +111,7 @@ const guests = [
     description: "Developing a highly diversified and globally competitive tree crop industry for Ghana.",
     session: "Opening Remarks (Day 4 — 09:00 AM)",
     sessionLabel: "Speaking",
-    image: "/images/guests/william.png"
+    image: "/images/guests/prof_william_oduro.png"
   },
   {
     name: "Dr. Andy Osei Okrah",
@@ -220,9 +220,11 @@ export default function Guests() {
                    {/* Fallback title category mapping or static text */}
                    {guests[currentSlide].badge === "TCDA Leadership" 
                      ? "Leadership" 
-                     : guests[currentSlide].badge === "Distinguished Guest" 
-                       ? "Distinguished Guest" 
-                       : "Distinguished Speaker"}
+                     : guests[currentSlide].badge === "Special Dignitary" 
+                       ? "Distinguished Guest"
+                       : guests[currentSlide].badge === "Distinguished Guest" 
+                         ? "Distinguished Guest" 
+                         : "Distinguished Speaker"}
                 </span>
                 <h3 className="text-2xl md:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-4 md:mb-6 leading-tight">
                   {guests[currentSlide].name}

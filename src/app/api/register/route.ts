@@ -13,34 +13,40 @@ export async function POST(request: Request) {
             phone,
             organization,
             jobTitle,
-            country
+            country,
+            fieldVisit,
+            fieldVisitLocation
         } = body;
 
-        // Basic validation
-        if (!firstName || !lastName || !email || !phone || !organization || !country) {
+        // Basic validation - Removed email from required fields
+        if (!firstName || !lastName || !phone || !organization || !country) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
         const db = await getDb();
+        
+        // Handle empty email as null for unique constraint
+        const emailValue = email && email.trim() !== '' ? email : null;
 
         // Insert into database
         try {
             await db.run(
                 `INSERT INTO registrants (
-                    title, firstName, lastName, email, phone, organization, jobTitle, country
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-                [title, firstName, lastName, email, phone, organization, jobTitle, country]
+                    title, firstName, lastName, email, phone, organization, jobTitle, country, fieldVisit, fieldVisitLocation
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [title, firstName, lastName, emailValue, phone, organization, jobTitle, country, fieldVisit ? 1 : 0, fieldVisitLocation]
             );
         } catch (dbError: unknown) {
             const message = dbError instanceof Error ? dbError.message : '';
-            if (message && message.includes('UNIQUE constraint failed')) {
+            if (message && message.includes('UNIQUE constraint failed') && emailValue) {
                 return NextResponse.json({ error: 'This email is already registered.' }, { status: 400 });
             }
             throw dbError;
         }
 
-        // Send confirmation email via Brevo
-        // NOTE: You should store these credentials in environment variables (.env.local)
+        // Send confirmation email via Brevo only if email is provided
+        if (emailValue) {
+            // NOTE: You should store these credentials in environment variables (.env.local)
         // BREVO_SMTP_HOST=smtp-relay.brevo.com
         // BREVO_SMTP_PORT=587
         // BREVO_USER=your-brevo-email@example.com

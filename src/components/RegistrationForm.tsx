@@ -203,6 +203,27 @@ const COUNTRIES = [
     'Other',
 ];
 
+const FIELD_VISIT_LOCATIONS = [
+    {
+        id: 'USIBRAS',
+        name: 'USIBRAS GHANA LIMITED',
+        crop: 'Cashew',
+        location: 'PRAMPRAM'
+    },
+    {
+        id: 'Wilmar',
+        name: 'Wilmar Africa Limited',
+        crop: 'Oil Palm',
+        location: 'Tema'
+    },
+    {
+        id: 'HPW',
+        name: 'HPW GHANA',
+        crop: 'Coconut',
+        location: 'Nsawam'
+    }
+];
+
 const JOB_TITLE_OPTIONS = [
     'Programme Officer',
     'Program Officer',
@@ -258,6 +279,8 @@ type FormData = {
     organization: string;
     jobTitle: string;
     country: string;
+    fieldVisit: boolean;
+    fieldVisitLocation: string;
 };
 
 type Errors = Partial<Record<keyof FormData | 'submit', string>>;
@@ -271,25 +294,50 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
         phone: '',
         organization: '',
         jobTitle: '',
-        country: '',
+        country: 'Ghana',
+        fieldVisit: false,
+        fieldVisitLocation: '',
     });
 
     const [errors, setErrors] = useState<Errors>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const { name, value, type } = e.target;
+        
+        if (type === 'checkbox') {
+             const checked = (e.target as HTMLInputElement).checked;
+             setFormData((prev) => ({ ...prev, [name]: checked }));
+        } else {
+             setFormData((prev) => ({ ...prev, [name]: value }));
+        }
+    };
+
+    const handleFieldVisitChange = (isJoining: boolean) => {
+        setFormData(prev => ({ 
+            ...prev, 
+            fieldVisit: isJoining,
+            fieldVisitLocation: isJoining ? prev.fieldVisitLocation : '' // clear location if not joining
+        }));
+    };
+
+    const handleLocationSelect = (locationId: string) => {
+        setFormData(prev => ({ ...prev, fieldVisitLocation: locationId }));
     };
 
     const validate = (): Errors => {
         const newErrors: Errors = {};
         if (!formData.firstName) newErrors.firstName = 'First Name is required';
         if (!formData.lastName) newErrors.lastName = 'Last Name is required';
-        if (!formData.email) newErrors.email = 'Email is required';
+        // Email is now optional
         if (!formData.phone) newErrors.phone = 'Phone number is required';
         if (!formData.organization) newErrors.organization = 'Organization is required';
         if (!formData.country) newErrors.country = 'Country is required';
+        
+        if (formData.fieldVisit && !formData.fieldVisitLocation) {
+            newErrors.fieldVisitLocation = 'Please select a location for the field visit';
+        }
+        
         return newErrors;
     };
 
@@ -391,7 +439,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
 
                 {/* Email */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
                     <Input
                         name="email"
                         type="email"
@@ -399,7 +447,6 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                         onChange={handleChange}
                         error={errors.email}
                         placeholder="john.doe@example.com"
-                        required
                     />
                 </div>
 
@@ -454,24 +501,24 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Country *</label>
                     <div className="w-full">
-                        <select
+                        <input
                             name="country"
                             value={formData.country}
                             onChange={handleChange}
                             required
+                            list="country-options"
+                            placeholder="Select or type country"
                             className={`w-full border rounded-md p-2 bg-white/90 focus:outline-none focus:ring-2 focus:ring-brand-gold ${
                                 errors.country ? 'border-red-500' : 'border-gray-300'
                             }`}
                             aria-invalid={!!errors.country}
                             aria-describedby={errors.country ? 'country-error' : undefined}
-                        >
-                            <option value="">Select Country</option>
+                        />
+                        <datalist id="country-options">
                             {COUNTRIES.map((c) => (
-                                <option key={c} value={c}>
-                                    {c}
-                                </option>
+                                <option key={c} value={c} />
                             ))}
-                        </select>
+                        </datalist>
                         {errors.country ? (
                             <p id="country-error" className="mt-1 text-sm text-red-600">
                                 {errors.country}
@@ -479,6 +526,80 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                         ) : null}
                     </div>
                 </div>
+            </div>
+
+            {/* Field Visit Section */}
+            <div className="mt-8 border-t pt-6">
+                <h3 className="text-xl font-semibold text-brand-green mb-4">Field Visit Selection (21st January)</h3>
+                
+                <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Would you like to participate in the field visit?
+                    </label>
+                    <div className="flex gap-4">
+                        <label className="flex items-center space-x-2 cursor-pointer">
+                            <input
+                                type="radio"
+                                name="fieldVisit_yes"
+                                checked={formData.fieldVisit === true}
+                                onChange={() => handleFieldVisitChange(true)}
+                                className="w-4 h-4 text-brand-green focus:ring-brand-green border-gray-300"
+                            />
+                            <span>Yes, I will participate</span>
+                        </label>
+                        <label className="flex items-center space-x-2 cursor-pointer">
+                            <input
+                                type="radio"
+                                name="fieldVisit_no"
+                                checked={formData.fieldVisit === false}
+                                onChange={() => handleFieldVisitChange(false)}
+                                className="w-4 h-4 text-brand-green focus:ring-brand-green border-gray-300"
+                            />
+                            <span>No, I won&apos;t participate</span>
+                        </label>
+                    </div>
+                </div>
+
+                {formData.fieldVisit && (
+                    <div className="space-y-4">
+                        <p className="text-sm text-gray-600 mb-4">Please select one location to visit:</p>
+                        {errors.fieldVisitLocation && (
+                            <p className="text-red-600 text-sm mb-2">{errors.fieldVisitLocation}</p>
+                        )}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {FIELD_VISIT_LOCATIONS.map((loc) => (
+                                <div
+                                    key={loc.id}
+                                    onClick={() => handleLocationSelect(loc.id)}
+                                    className={`cursor-pointer rounded-lg border-2 p-4 transition-all hover:shadow-md ${
+                                        formData.fieldVisitLocation === loc.id
+                                            ? 'border-brand-green bg-green-50 ring-2 ring-brand-green ring-opacity-50'
+                                            : 'border-gray-200 bg-white hover:border-brand-green/50'
+                                    }`}
+                                >
+                                    <div className="flex flex-col h-full">
+                                        <div className="font-bold text-lg text-gray-800 mb-2">{loc.name}</div>
+                                        <div className="text-sm text-gray-600 mb-1">
+                                            <span className="font-semibold">Crop:</span> {loc.crop}
+                                        </div>
+                                        <div className="text-sm text-gray-600">
+                                            <span className="font-semibold">Location:</span> {loc.location}
+                                        </div>
+                                        <div className="mt-4 flex justify-end">
+                                            <div className={`w-4 h-4 rounded-full border border-gray-400 flex items-center justify-center ${
+                                                formData.fieldVisitLocation === loc.id ? 'bg-brand-green border-brand-green' : ''
+                                            }`}>
+                                                {formData.fieldVisitLocation === loc.id && (
+                                                    <div className="w-2 h-2 rounded-full bg-white" />
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
 
             <div className="mt-8 flex justify-center">

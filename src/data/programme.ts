@@ -8,57 +8,97 @@ export const programme = [
       {
         time: "08:00 AM - 09:50 AM",
         title: "Registration and Networking",
-        description: "Arrival of guests and registration."
+        description: ""
       },
       {
         time: "09:00 AM - 09:55 AM",
         title: "Show of Documentaries & Videos",
-        description: "Showcasing TCDA activities and achievements."
+        description: ""
       },
       {
         time: "09:50 AM - 10:00 AM",
-        title: "Arrival of Dignitaries",
-        description: "Arrival of H.E. the President of Ghana and HRM, the Asantehene."
+        title: "Arrival of H.E. the President of Ghana and HRM, the Asantehene",
+        description: ""
       },
       {
-        time: "10:00 AM - 10:20 AM",
-        title: "Opening Formalities",
-        description: "National Anthem, Introduction of Dignitaries, and Purpose of Gathering by CEO of TCDA."
+        time: "10:00 AM - 10:05 AM",
+        title: "The National Anthem",
+        description: ""
+      },
+      {
+        time: "10:05 AM - 10:10 AM",
+        title: "Introduction of Dignitaries",
+        description: ""
+      },
+      {
+        time: "10:10 AM - 10:20 AM",
+        title: "Purpose of gathering - CEO of TCDA",
+        description: ""
       },
       {
         time: "10:20 AM - 10:30 AM",
-        title: "Remarks by Development Partners",
-        description: "Statements from key development partners."
+        title: "Remarks by DPs",
+        description: ""
+      },
+      {
+        time: "10:30 AM - 10:35 AM",
+        title: "Cultural Interlude",
+        description: ""
       },
       {
         time: "10:35 AM - 10:55 AM",
-        title: "Presentation: C-CORMS",
-        description: "Contribution to the Economy of Ghana and Vision for the Future."
+        title: "Presentation: C-CORMS Contribution to the Economy of Ghana and Vision for the Future",
+        description: ""
       },
       {
-        time: "10:55 AM - 11:15 AM",
-        title: "Keynote Address",
-        description: "Address by H.E. the President of the Republic of Ghana (Special Guest Speaker)."
+        time: "10:40 AM - 10:45 AM",
+        title: "Appellation and introduction of the Special Guest Speaker",
+        description: ""
+      },
+      {
+        time: "10:45 AM - 11:15 AM",
+        title: "Keynote address by H.E. the President of the Republic of Ghana (Special Guest Speaker)",
+        description: ""
+      },
+      {
+        time: "11:15 AM - 11:25 AM",
+        title: "Appellation and introduction of the Special Guest of Honour",
+        description: ""
       },
       {
         time: "11:25 AM - 11:30 AM",
-        title: "Official Opening",
-        description: "Official opening of the event by H.E. the President and HRM Otumfuo Osei II."
+        title: "Official opening of the event - HRM Otumfuo Osei II, the Asantehene",
+        description: ""
       },
       {
         time: "11:30 AM - 11:50 AM",
         title: "Presentation of Awards",
-        description: "Recognition of key contributors to the sector."
+        description: ""
+      },
+      {
+        time: "11:50 AM - 12:00 PM",
+        title: "Photos of Dignitaries",
+        description: ""
       },
       {
         time: "12:00 PM - 12:15 PM",
-        title: "Official Opening of Exhibition",
-        description: "Tour of the exhibition stands by Dignitaries."
+        title: "Official opening of the Exhibition",
+        description: "H.E. the President of Republic of Ghana, HRM the Asantehene, the World Bank Country Director and the Swiss Ambassador"
+      },
+      {
+        time: "12:15 PM - 12:20 PM",
+        title: "Departure of H.E. the President of Republic of Ghana and HRM the Asantehene",
+        description: ""
       },
       {
         time: "Afternoon Session",
-        title: "Value Chain Presentations",
-        description: "Detailed presentation on all 6 Value Chains (C-CORMS) & Panel Discussion on Climate Resilience."
+        title: "A detailed presentation on all 6 Value Chains (C-CORMS...)",
+        description: ""
+      },
+      {
+        time: "Panel Discussion",
+         title: "Climate Resilience Tree Crops Supply Chain from the Production through to Processing to Export-Ghana's Case Study",
+        description: "Keynote Speaker: to be determined..."
       }
     ]
   },
@@ -66,7 +106,7 @@ export const programme = [
     day: "Day 2 - February 18, 2026",
     date: 18,
     monthShort: "FEB",
-    theme: "Focus on Coconut & Cashew Value Chains",
+    theme: "Focus on Coconut Value Chain and Cashew Value Chain",
     activities: [
       {
         time: "08:00 AM - 09:00 AM",
@@ -74,27 +114,27 @@ export const programme = [
         description: ""
       },
       {
-        time: "09:00 AM - 09:20 AM",
-        title: "Opening Remarks",
-        description: "Remarks by TCDA Leadership."
+        time: "09:00 AM - 09:30 AM",
+        title: "Opening Remarks by TCDA Leadership",
+        description: ""
       },
       {
-        time: "09:20 AM - 09:50 AM",
-        title: "Keynote Addresses",
-        description: "Addresses by Minister of Food and Agriculture and Minister of Trade, Agribusiness & Industry."
+        time: "09:30 AM - 09:50 AM",
+        title: "Remarks by Chairman",
+        description: ""
       },
       {
-        time: "09:50 AM - 10:30 AM",
-        title: "Presentation: TCDA Achievements",
-        description: "TCDA Achievements so far and Vision for the Future."
+        time: "09:50 AM - 10:20 AM",
+        title: "Keynote Addresses by Minister of Food and Agriculture and Minister of Trade, Agribusiness & Industry",
+        description: ""
       },
       {
-        time: "10:30 AM - 11:30 AM",
-        title: "Panel Discussion",
-        description: "Opportunities in Coconut Value Chain and Cashew Value Chain."
+        time: "10:20 AM - 11:40 AM",
+        title: "Panel Discussion: Opportunities in Cashew and Coconut Value Chains (from Production to Processing through Research)",
+        description: ""
       },
       {
-        time: "11:30 AM - 12:00 PM",
+        time: "11:40 AM - 12:00 PM",
         title: "Q&A Session",
         description: ""
       },
@@ -104,19 +144,29 @@ export const programme = [
         description: ""
       },
       {
-        time: "01:00 PM - 02:30 PM",
-        title: "Value Chain Spotlight",
-        description: "Investment Opportunities and Challenges."
+        time: "01:00 PM - 02:00 PM",
+        title: "Youth in Tree Crops Enterprise",
+        description: ""
       },
       {
-        time: "02:30 PM - 03:30 PM",
-        title: "Breakout Session",
-        description: "Collaboration Strategies for Stakeholders."
+        time: "02:00 PM - 02:40 PM",
+        title: "Presentation: Keynote Financial Address by the Governor of the Bank of Ghana",
+        description: ""
       },
       {
-        time: "03:30 PM - 04:30 PM",
-        title: "Exhibition Tour",
-        description: "Stakeholder Booth Visits."
+        time: "02:40 PM - 04:00 PM",
+        title: "Panel Discussion: Financial Institutions' Role in Sector Growth and Exploring Funding Mechanisms",
+        description: ""
+      },
+      {
+        time: "04:00 PM - 04:30 PM",
+        title: "Q&A Session",
+        description: ""
+      },
+      {
+        time: "04:30 PM",
+        title: "Exhibition Tour and Stakeholder Booth Visits",
+        description: ""
       }
     ]
   },
@@ -124,7 +174,7 @@ export const programme = [
     day: "Day 3 - February 19, 2026",
     date: 19,
     monthShort: "FEB",
-    theme: "Focus on Oil Palm & Rubber Value Chains",
+    theme: "Focus on Oil Palm Value Chain and Mango Value Chain",
     activities: [
       {
         time: "08:00 AM - 09:00 AM",
@@ -133,18 +183,23 @@ export const programme = [
       },
       {
         time: "09:00 AM - 09:30 AM",
-        title: "Opening Keynote",
-        description: "Keynote by Development Partner Representative (World Bank/ILO/ProForest)."
+        title: "Remarks by Chairman",
+        description: ""
       },
       {
-        time: "09:30 AM - 10:30 AM",
-        title: "Panel Discussion",
-        description: "Innovations in Oil Palm and Rubber Value Chains."
+        time: "09:30 AM - 10:00 AM",
+        title: "Keynote Addresses by Development Partner Representatives (World Bank/ILO/ProForest)",
+        description: ""
       },
       {
-        time: "10:30 AM - 11:30 AM",
-        title: "Presentation",
-        description: "Financial Institutions' Role in Sector Growth."
+        time: "10:00 AM - 11:30 AM",
+        title: "Panel Discussion: Opportunities in Oil Palm and Mango Value Chains (from Production to Processing through Research)",
+        description: ""
+      },
+      {
+        time: "11:30 AM - 12:00 PM",
+        title: "Q&A Session",
+        description: ""
       },
       {
         time: "12:00 PM - 01:00 PM",
@@ -153,18 +208,28 @@ export const programme = [
       },
       {
         time: "01:00 PM - 02:00 PM",
-        title: "Workshops",
-        description: "Value Chain Development Strategies."
+        title: "Women in Tree Crops Enterprise",
+        description: ""
       },
       {
-        time: "02:00 PM - 03:30 PM",
-        title: "Panel Discussion",
-        description: "Exploring Funding Mechanisms."
+        time: "02:00 PM - 02:40 PM",
+        title: "Presentation: Key Financial Address by The President and Chairman of the Board of Directors of the ECOWAS Bank for Investment and Development (EBID), Dr George Agyekum Donkor",
+        description: ""
       },
       {
-        time: "03:30 PM - 04:30 PM",
-        title: "Exhibitions",
-        description: "Partner Booth Visits."
+        time: "02:40 PM - 04:00 PM",
+        title: "Panel Discussion: Financial Institutions' Role in Sector Growth and Exploring Funding Mechanisms",
+        description: ""
+      },
+      {
+        time: "04:00 PM - 04:30 PM",
+        title: "Q&A Session",
+        description: ""
+      },
+      {
+        time: "04:30 PM",
+        title: "Exhibitions and Partner Booth Visits",
+        description: ""
       }
     ]
   },
@@ -172,7 +237,7 @@ export const programme = [
     day: "Day 4 - February 20, 2026",
     date: 20,
     monthShort: "FEB",
-    theme: "Focus on Mango & Shea Value Chains",
+    theme: "Focus on Shea Value Chain and Rubber Value Chain",
     activities: [
       {
         time: "08:00 AM - 09:00 AM",
@@ -181,43 +246,38 @@ export const programme = [
       },
       {
         time: "09:00 AM - 09:20 AM",
-        title: "Opening Remarks",
-        description: "Remarks by TCDA Board Chair."
+        title: "Opening Remarks by TCDA Board Chair",
+        description: ""
       },
       {
-        time: "09:20 AM - 09:50 AM",
-        title: "Keynote Address",
-        description: "Address by Private Sector Sponsor Representative."
+        time: "09:20 AM - 10:00 AM",
+        title: "Keynote Address by Private Sector Sponsor Representative",
+        description: ""
       },
       {
-        time: "09:50 AM - 10:30 AM",
-        title: "Presentation",
-        description: "Investment Success Stories and Case Studies."
-      },
-      {
-        time: "10:30 AM - 11:30 AM",
-        title: "Panel Discussion",
-        description: "Scaling Investments in Mango and Shea Value Chains."
+        time: "10:00 AM - 12:00 PM",
+        title: "Panel Discussion: Financial Institutions' Role in Sector Growth and Opportunities in Shea value and Rubber Value Chains (from Production to Processing through Research)",
+        description: ""
       },
       {
         time: "12:00 PM - 01:00 PM",
-        title: "Lunch and Networking",
+        title: "Lunch and Networking Opportunities",
         description: ""
       },
       {
         time: "01:00 PM - 02:30 PM",
-        title: "Investor Pitch Sessions",
-        description: "Presenting Investment Opportunities."
+        title: "Exhibition & Partners Booth Visit",
+        description: ""
       },
       {
-        time: "02:30 PM - 03:00 PM",
-        title: "Exhibition",
-        description: "Partners Booth Visit."
+        time: "05:00 PM",
+        title: "GALA NIGHT: DINNER – BLACK TIE and GOWN",
+        description: ""
       },
-      {
-        time: "03:30 PM - 04:00 PM",
-        title: "Gala Night & Closing",
-        description: "Dinner (Black Tie), Closing Ceremony, Recognition of Sponsors, and Closing Remarks."
+       {
+        time: "Closing Ceremony",
+        title: "Closing Ceremony/Recognition of Sponsors and Partners",
+        description: "Special Guests of Honours: H.E. The Vice President of the Republic of Ghana, Ga Manste, King Tackie Teiko Tsuru II. Closing Remarks by TCDA Leadership"
       }
     ]
   }

@@ -153,34 +153,62 @@ const Programme: React.FC = () => {
                                 return (
                                     <div 
                                         key={index} 
-                                        className={`group p-5 rounded-2xl border transition-all flex items-start gap-4 md:gap-6 ${
+                                        className={`group p-4 md:p-6 rounded-2xl border transition-all flex items-stretch gap-4 md:gap-6 ${
                                             status === 'active' 
                                             ? 'bg-brand-green/5 border-brand-green/30 ring-2 ring-brand-green/10 ring-offset-2' 
                                             : status === 'completed'
                                             ? 'bg-gray-50 border-gray-100 opacity-60'
-                                            : 'bg-white border-gray-200 hover:border-brand-gold/30 hover:shadow-sm'
+                                            : 'bg-white border-gray-200 hover:border-brand-green hover:shadow-lg hover:-translate-y-1'
                                         }`}
                                     >
-                                        <div className="min-w-[100px] pt-1">
-                                            <span className={`text-[11px] font-black uppercase tracking-tighter px-2 py-1 rounded inline-block text-center w-full ${
-                                                status === 'active' ? 'bg-brand-green text-white' : 'bg-gray-200 text-gray-600'
+                                        {/* Time Column - Uniform width and centered vertically/horizontally */}
+                                        <div className="hidden md:flex flex-none w-[130px] flex-col justify-center">
+                                            <div className={`flex flex-col items-center justify-center p-3 rounded-xl text-center h-full w-full border ${
+                                                status === 'active' 
+                                                ? 'bg-brand-green text-white border-brand-green' 
+                                                : 'bg-gray-50 text-gray-600 border-gray-100 group-hover:bg-gray-100 transition-colors'
                                             }`}>
-                                                {session.time}
+                                                {session.time.includes(' - ') ? (
+                                                    <>
+                                                        <span className="text-xs font-black uppercase tracking-tight block leading-none mb-1.5">
+                                                            {session.time.split(' - ')[0]}
+                                                        </span>
+                                                        <div className={`h-px w-4 my-1 opacity-30 ${status === 'active' ? 'bg-white' : 'bg-gray-400'}`}></div>
+                                                        <span className="text-xs font-black uppercase tracking-tight block leading-none mt-1.5 opacity-90">
+                                                            {session.time.split(' - ')[1]}
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <span className="text-xs font-black uppercase tracking-tight block leading-tight">
+                                                        {session.time}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Mobile Time (simpler version) */}
+                                        <div className="md:hidden flex-none pt-1">
+                                             <span className={`text-[10px] font-black uppercase tracking-tight px-2 py-1 rounded block text-center ${
+                                                status === 'active' ? 'bg-brand-green text-white' : 'bg-gray-100 text-gray-500'
+                                            }`}>
+                                                {session.time.split(' - ')[0]}
                                             </span>
                                         </div>
                                         
-                                        <div className="flex-grow">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <h5 className={`font-bold text-lg leading-tight ${
+                                        <div className="flex-grow py-1 flex flex-col justify-center">
+                                            <div className="flex flex-wrap items-start gap-2 mb-2">
+                                                <h5 className={`font-medium text-lg leading-snug max-w-2xl ${
                                                     status === 'active' ? 'text-brand-green' : 'text-brand-black'
                                                 }`}>
                                                     {session.title}
                                                 </h5>
-                                                {status === 'completed' && <CheckCircle2 size={16} className="text-brand-green" />}
-                                                {session.title.toLowerCase().includes('award') && <Award size={16} className="text-brand-gold" />}
+                                                <div className="flex items-center mt-1 space-x-1">
+                                                    {status === 'completed' && <CheckCircle2 size={16} className="text-brand-green" />}
+                                                    {session.title.toLowerCase().includes('award') && <Award size={16} className="text-brand-gold" />}
+                                                </div>
                                             </div>
                                             {session.description && (
-                                                <p className={`text-sm ${
+                                                <p className={`text-sm leading-relaxed max-w-3xl ${
                                                     status === 'active' ? 'text-brand-green/80' : 'text-gray-500'
                                                 }`}>
                                                     {session.description}
@@ -188,10 +216,8 @@ const Programme: React.FC = () => {
                                             )}
                                         </div>
 
-                                        <div className="hidden md:block">
-                                            <button className="p-2 text-gray-300 hover:text-brand-green transition-colors">
-                                                <ArrowRight size={18} />
-                                            </button>
+                                        <div className="hidden md:flex items-center text-gray-300 group-hover:text-brand-green transition-colors pl-4 border-l border-gray-50 group-hover:border-gray-100">
+                                            <ArrowRight size={20} />
                                         </div>
                                     </div>
                                 );
