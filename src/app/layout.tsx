@@ -2,7 +2,6 @@ import React from 'react';
 import './globals.css';
 
 import Navbar from '../components/Navbar';
-import Footer from '../components/sections/Footer';
 import AppShell from '../components/AppShell';
 import NatureDecorations from '../components/NatureDecorations';
 
@@ -24,7 +23,6 @@ export default function RootLayout({
                     <div className="flex min-h-screen flex-col relative z-10">
                         <Navbar />
                         <main className="flex-grow">{children}</main>
-                        <Footer />
                     </div>
                 </AppShell>
             </body>
