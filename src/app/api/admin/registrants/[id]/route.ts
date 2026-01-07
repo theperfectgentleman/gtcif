@@ -24,3 +24,21 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
         return NextResponse.json({ error: 'Database error' }, { status: 500 });
     }
 }
+
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const cookieStore = await cookies();
+    const session = cookieStore.get('admin_session');
+
+    if (!session) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    try {
+        const db = await getDb();
+        await db.run('DELETE FROM registrants WHERE id = ?', id);
+        return NextResponse.json({ success: true });
+    } catch {
+        return NextResponse.json({ error: 'Database error' }, { status: 500 });
+    }
+}

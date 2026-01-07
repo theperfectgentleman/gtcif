@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Users, LayoutDashboard, FileText, UserPlus, LogOut, Search, Printer, Key } from 'lucide-react';
+import { Users, LayoutDashboard, FileText, UserPlus, LogOut, Search, Printer, Key, Trash2 } from 'lucide-react';
 import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 import Modal from '../../../components/ui/Modal';
@@ -166,13 +166,70 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleRoleChange = async (userId: number, newRole: string) => {
+        try {
+            const res = await fetch('/api/admin/users', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id: userId,
+                    role: newRole
+                })
+            });
+
+            if (res.ok) {
+                setUsers(users.map(u => u.id === userId ? { ...u, role: newRole } : u));
+            } else {
+                alert('Failed to update role');
+            }
+        } catch {
+            alert('An error occurred');
+        }
+    };
+
+    const handleDeleteUser = async (userId: number) => {
+        if (!confirm('Are you sure you want to delete this user?')) return;
+
+        try {
+            const res = await fetch(`/api/admin/users?id=${userId}`, {
+                method: 'DELETE',
+            });
+
+            if (res.ok) {
+                 setUsers(users.filter(u => u.id !== userId));
+            } else {
+                alert('Failed to delete user');
+            }
+        } catch {
+            alert('An error occurred');
+        }
+    };
+
     const handleLogout = () => {
         document.cookie = 'admin_session=; Max-Age=0; path=/;';
         document.cookie = 'admin_role=; Max-Age=0; path=/;';
         router.push('/admin');
     };
 
-    const filteredRegistrants = registrants.filter(reg => 
+    const handleDeleteRegistrant = async (id: number) => {
+        if (!confirm('Are you sure you want to delete this registrant?')) return;
+
+        try {
+            const res = await fetch(`/api/admin/registrants/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (res.ok) {
+                setRegistrants(registrants.filter(r => r.id !== id));
+            } else {
+                alert('Failed to delete registrant');
+            }
+        } catch {
+            alert('An error occurred');
+        }
+    };
+
+    const filteredRegistrants = registrants.filter(reg =>  
         reg.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reg.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reg.organization.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -280,13 +337,22 @@ const AdminDashboard = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{reg.country}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{reg.email}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <button 
-                                            onClick={() => handlePrint(reg.id)}
-                                            className="text-brand-green hover:text-brand-gold flex items-center gap-1"
-                                            title="Print Badge"
-                                        >
-                                            <Printer size={16} /> Print
-                                        </button>
+                                        <div className="flex gap-3">
+                                            <button 
+                                                onClick={() => handlePrint(reg.id)}
+                                                className="text-brand-green hover:text-brand-gold flex items-center gap-1"
+                                                title="Print Badge"
+                                            >
+                                                <Printer size={16} /> Print
+                                            </button>
+                                            <button 
+                                                onClick={() => handleDeleteRegistrant(reg.id)}
+                                                className="text-red-600 hover:text-red-800 flex items-center gap-1"
+                                                title="Delete Registrant"
+                                            >
+                                                <Trash2 size={16} /> Delete
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -359,12 +425,18 @@ const AdminDashboard = () => {
                             <li key={u.id} className="px-6 py-4 flex items-center justify-between">
                                 <div>
                                     <p className="text-sm font-medium text-gray-900">{u.username}</p>
-                                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
-                                        ${u.role === 'admin' ? 'bg-purple-100 text-purple-800' : 
-                                          u.role === 'manager' ? 'bg-blue-100 text-blue-800' : 
-                                          'bg-green-100 text-green-800'}`}>
-                                        {u.role}
-                                    </span>
+                                    <select
+                                        value={u.role}
+                                        onChange={(e) => handleRoleChange(u.id, e.target.value)}
+                                        className={`mt-1 text-xs font-medium capitalize rounded border-0 py-0.5 pl-2 pr-6 cursor-pointer focus:ring-2 focus:ring-brand-green sm:text-xs
+                                            ${u.role === 'admin' ? 'bg-purple-100 text-purple-800' : 
+                                              u.role === 'manager' ? 'bg-blue-100 text-blue-800' : 
+                                              'bg-green-100 text-green-800'}`}
+                                    >
+                                        <option value="media">media</option>
+                                        <option value="manager">manager</option>
+                                        <option value="admin">admin</option>
+                                    </select>
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <div className="text-sm text-gray-500">
@@ -376,6 +448,13 @@ const AdminDashboard = () => {
                                         title="Reset Password"
                                     >
                                         <Key size={18} />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDeleteUser(u.id)}
+                                        className="p-1 text-red-400 hover:text-red-600 transition-colors"
+                                        title="Delete User"
+                                    >
+                                        <Trash2 size={18} />
                                     </button>
                                 </div>
                             </li>

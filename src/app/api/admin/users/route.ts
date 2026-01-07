@@ -52,20 +52,46 @@ export async function PUT(request: Request) {
     }
 
     const body = await request.json();
-    const { id, password } = body;
+    const { id, password, role: newRole } = body;
 
-    if (!id || !password) {
+    if (!id) {
         return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
     }
 
     const db = await getDb();
     try {
-        await db.run(
-            'UPDATE users SET password = ? WHERE id = ?',
-            password, id
-        );
+        if (password) {
+            await db.run('UPDATE users SET password = ? WHERE id = ?', password, id);
+        }
+        if (newRole) {
+            await db.run('UPDATE users SET role = ? WHERE id = ?', newRole, id);
+        }
         return NextResponse.json({ success: true });
     } catch {
-        return NextResponse.json({ success: false, error: 'Could not update password.' }, { status: 500 });
+        return NextResponse.json({ success: false, error: 'Could not update user.' }, { status: 500 });
+    }
+}
+
+export async function DELETE(request: Request) {
+    const cookieStore = await cookies();
+    const role = cookieStore.get('admin_role')?.value;
+    
+    if (role !== 'admin') {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+        return NextResponse.json({ error: 'Missing user ID' }, { status: 400 });
+    }
+
+    const db = await getDb();
+    try {
+        await db.run('DELETE FROM users WHERE id = ?', id);
+        return NextResponse.json({ success: true });
+    } catch {
+        return NextResponse.json({ error: 'Database error' }, { status: 500 });
     }
 }
