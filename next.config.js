@@ -1,6 +1,6 @@
 module.exports = {
   reactStrictMode: true,
-  serverExternalPackages: ['sqlite3'],
+  serverExternalPackages: ['pg'],
   images: {
     remotePatterns: [
       {
