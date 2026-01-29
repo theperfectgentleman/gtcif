@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Users, LayoutDashboard, FileText, UserPlus, LogOut, Search, Printer, Key, Trash2, Mail, CheckCircle, XCircle } from 'lucide-react';
+import { Users, LayoutDashboard, FileText, UserPlus, LogOut, Search, Printer, Key, Trash2, Mail, CheckCircle, XCircle, Eye } from 'lucide-react';
 import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 import Modal from '../../../components/ui/Modal';
@@ -12,11 +12,16 @@ type Registrant = {
     title: string;
     firstName: string;
     lastName: string;
-    email: string;
+    email: string | null;
+    phone: string;
     organization: string;
+    jobTitle?: string;
     country: string;
+    fieldVisit?: boolean;
+    fieldVisitLocation?: string;
     registrationDate: string;
     emailSent?: boolean;
+    emailSentAt?: string;
 };
 
 type User = {
@@ -53,6 +58,9 @@ const AdminDashboard = () => {
     const [resetConfirm, setResetConfirm] = useState('');
     const [resetError, setResetError] = useState('');
     const [resetSuccess, setResetSuccess] = useState('');
+
+    // Registrant Detail View State
+    const [selectedRegistrant, setSelectedRegistrant] = useState<Registrant | null>(null);
 
     const router = useRouter();
 
@@ -468,20 +476,27 @@ const AdminDashboard = () => {
                                         )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <div className="flex gap-3">
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => setSelectedRegistrant(reg)}
+                                                className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                                                title="View Details"
+                                            >
+                                                <Eye size={16} /> View
+                                            </button>
                                             <button
                                                 onClick={() => handlePrint(reg.id)}
                                                 className="text-brand-green hover:text-brand-gold flex items-center gap-1"
                                                 title="Print Badge"
                                             >
-                                                <Printer size={16} /> Print
+                                                <Printer size={16} />
                                             </button>
                                             <button
                                                 onClick={() => handleDeleteRegistrant(reg.id)}
                                                 className="text-red-600 hover:text-red-800 flex items-center gap-1"
                                                 title="Delete Registrant"
                                             >
-                                                <Trash2 size={16} /> Delete
+                                                <Trash2 size={16} />
                                             </button>
                                         </div>
                                     </td>
@@ -680,6 +695,130 @@ const AdminDashboard = () => {
                 {activeTab === 'registrants' && renderRegistrantList()}
                 {activeTab === 'users' && role === 'admin' && renderUserManagement()}
             </div>
+
+            {/* Registrant Details Modal */}
+            <Modal
+                isOpen={!!selectedRegistrant}
+                onClose={() => setSelectedRegistrant(null)}
+                title="Registrant Details"
+            >
+                {selectedRegistrant && (
+                    <div className="space-y-6">
+                        {/* Personal Information */}
+                        <div className="bg-gray-50 rounded-lg p-4">
+                            <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Personal Information</h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-xs text-gray-500 uppercase">Title</label>
+                                    <p className="text-sm font-medium text-gray-900">{selectedRegistrant.title || 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <label className="text-xs text-gray-500 uppercase">Full Name</label>
+                                    <p className="text-sm font-medium text-gray-900">
+                                        {selectedRegistrant.firstName} {selectedRegistrant.lastName}
+                                    </p>
+                                </div>
+                                <div>
+                                    <label className="text-xs text-gray-500 uppercase">Email</label>
+                                    <p className="text-sm font-medium text-gray-900">{selectedRegistrant.email || 'Not provided'}</p>
+                                </div>
+                                <div>
+                                    <label className="text-xs text-gray-500 uppercase">Phone</label>
+                                    <p className="text-sm font-medium text-gray-900">{selectedRegistrant.phone}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Professional Information */}
+                        <div className="bg-gray-50 rounded-lg p-4">
+                            <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Professional Information</h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-xs text-gray-500 uppercase">Organization</label>
+                                    <p className="text-sm font-medium text-gray-900">{selectedRegistrant.organization}</p>
+                                </div>
+                                <div>
+                                    <label className="text-xs text-gray-500 uppercase">Job Title</label>
+                                    <p className="text-sm font-medium text-gray-900">{selectedRegistrant.jobTitle || 'Not specified'}</p>
+                                </div>
+                                <div>
+                                    <label className="text-xs text-gray-500 uppercase">Country</label>
+                                    <p className="text-sm font-medium text-gray-900">{selectedRegistrant.country}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Field Visit Information */}
+                        <div className="bg-gray-50 rounded-lg p-4">
+                            <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Field Visit</h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-xs text-gray-500 uppercase">Interested in Field Visit</label>
+                                    <p className="text-sm font-medium">
+                                        {selectedRegistrant.fieldVisit ? (
+                                            <span className="text-green-600 font-semibold">Yes</span>
+                                        ) : (
+                                            <span className="text-gray-500">No</span>
+                                        )}
+                                    </p>
+                                </div>
+                                {selectedRegistrant.fieldVisit && selectedRegistrant.fieldVisitLocation && (
+                                    <div>
+                                        <label className="text-xs text-gray-500 uppercase">Preferred Location</label>
+                                        <p className="text-sm font-medium text-gray-900">{selectedRegistrant.fieldVisitLocation}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Registration Status */}
+                        <div className="bg-gray-50 rounded-lg p-4">
+                            <h3 className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Registration Status</h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-xs text-gray-500 uppercase">Registration Date</label>
+                                    <p className="text-sm font-medium text-gray-900">
+                                        {new Date(selectedRegistrant.registrationDate).toLocaleString()}
+                                    </p>
+                                </div>
+                                <div>
+                                    <label className="text-xs text-gray-500 uppercase">Email Confirmation</label>
+                                    <p className="text-sm font-medium">
+                                        {selectedRegistrant.emailSent ? (
+                                            <span className="flex items-center text-green-600">
+                                                <CheckCircle size={16} className="mr-1" /> Sent
+                                                {selectedRegistrant.emailSentAt && (
+                                                    <span className="text-xs ml-2 text-gray-500">
+                                                        ({new Date(selectedRegistrant.emailSentAt).toLocaleDateString()})
+                                                    </span>
+                                                )}
+                                            </span>
+                                        ) : (
+                                            <span className="flex items-center text-gray-500">
+                                                <XCircle size={16} className="mr-1" /> Not Sent
+                                            </span>
+                                        )}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex justify-end gap-3 pt-4 border-t">
+                            <Button
+                                variant="outline"
+                                onClick={() => handlePrint(selectedRegistrant.id)}
+                            >
+                                <Printer size={16} className="mr-2" />
+                                Print Badge
+                            </Button>
+                            <Button onClick={() => setSelectedRegistrant(null)}>
+                                Close
+                            </Button>
+                        </div>
+                    </div>
+                )}
+            </Modal>
         </div>
     );
 };
