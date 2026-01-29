@@ -8,7 +8,11 @@ import { X, Search, CheckCircle, AlertCircle } from 'lucide-react';
 const Navbar = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [query, setQuery] = useState('');
-    const [result, setResult] = useState<any>(null);
+    const [result, setResult] = useState<
+        | { found: true; registrant: { firstName: string; lastName: string; organization: string } }
+        | { found: false }
+        | null
+    >(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 

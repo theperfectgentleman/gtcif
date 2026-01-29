@@ -36,8 +36,9 @@ export async function POST(request: Request) {
                 ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
                 [title, firstName, lastName, emailValue, phone, organization, jobTitle, country, fieldVisit ? 1 : 0, fieldVisitLocation]
             );
-        } catch (dbError: any) { // Type as any to access code property easily
-            if (dbError.code === '23505' && emailValue) { // Postgres unique violation code
+        } catch (dbError: unknown) {
+            const error = dbError as { code?: string };
+            if (error.code === '23505' && emailValue) { // Postgres unique violation code
                 return NextResponse.json({ error: 'This email is already registered.' }, { status: 400 });
             }
             throw dbError;

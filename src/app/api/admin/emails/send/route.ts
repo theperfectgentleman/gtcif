@@ -16,7 +16,18 @@ export async function POST(request: Request) {
         const { ids, sendToAllPending } = body;
         const db = getDb();
 
-        let registrantsToSend: any[] = [];
+        interface Registrant {
+            id: number;
+            email: string | null;
+            title?: string;
+            firstName: string;
+            lastName: string;
+            organization: string;
+            country: string;
+            emailSent?: boolean;
+        }
+
+        let registrantsToSend: Registrant[] = [];
 
         if (sendToAllPending) {
             const result = await db.query('SELECT * FROM registrants WHERE emailSent = FALSE OR emailSent IS NULL');
