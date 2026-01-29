@@ -11,9 +11,9 @@ export async function GET() {
     }
 
     try {
-        const db = await getDb();
-        const registrants = await db.all('SELECT * FROM registrants ORDER BY registrationDate DESC');
-        return NextResponse.json(registrants);
+        const db = getDb();
+        const result = await db.query('SELECT * FROM registrants ORDER BY registrationDate DESC');
+        return NextResponse.json(result.rows);
     } catch {
         return NextResponse.json({ error: 'Database error' }, { status: 500 });
     }
