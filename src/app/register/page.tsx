@@ -54,7 +54,7 @@ const RegisterPage = () => {
                                     </h3>
                                     <div className="mt-2 text-sm text-yellow-700">
                                         <p>
-                                            A confirmation email has been sent. <strong>If you don't see it in your inbox within a few minutes, please check your spam or junk mail folder</strong> and mark it as "Not Spam" to ensure you receive future updates.
+                                            A confirmation email has been sent. <strong>If you don&apos;t see it in your inbox within a few minutes, please check your spam or junk mail folder</strong> and mark it as &quot;Not Spam&quot; to ensure you receive future updates.
                                         </p>
                                     </div>
                                 </div>
