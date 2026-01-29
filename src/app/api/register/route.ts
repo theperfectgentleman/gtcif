@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '../../../lib/db';
-import nodemailer from 'nodemailer';
+import { sendEmail } from '../../../lib/email';
 
 export async function POST(request: Request) {
     try {
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
         }
 
         const db = await getDb();
-        
+
         // Handle empty email as null for unique constraint
         const emailValue = email && email.trim() !== '' ? email : null;
 
@@ -46,27 +46,10 @@ export async function POST(request: Request) {
 
         // Send confirmation email via Brevo only if email is provided
         if (emailValue) {
-            // NOTE: You should store these credentials in environment variables (.env.local)
-        // BREVO_SMTP_HOST=smtp-relay.brevo.com
-        // BREVO_SMTP_PORT=587
-        // BREVO_USER=your-brevo-email@example.com
-        // BREVO_PASSWORD=your-brevo-smtp-key
-        
-        const transporter = nodemailer.createTransport({
-            host: process.env.BREVO_SMTP_HOST || 'smtp-relay.brevo.com',
-            port: parseInt(process.env.BREVO_SMTP_PORT || '587'),
-            secure: false, // true for 465, false for other ports
-            auth: {
-                user: process.env.BREVO_USER || 'YOUR_BREVO_EMAIL', // TODO: Replace with your Brevo login email
-                pass: process.env.BREVO_PASSWORD || 'YOUR_BREVO_SMTP_KEY', // TODO: Replace with your Brevo SMTP key
-            },
-        });
-
-        const mailOptions = {
-            from: '"GTCIS 2026" <no-reply@gtcif.com>', // Sender address
-            to: email,
-            subject: 'Registration Confirmation - GTCIS 2026',
-            html: `
+            await sendEmail({
+                to: email,
+                subject: 'Registration Confirmation - GTCIS 2026',
+                html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <h1 style="color: #2F855A;">Registration Confirmed</h1>
                     <p>Dear ${title ? title + ' ' : ''}${firstName} ${lastName},</p>
@@ -81,16 +64,7 @@ export async function POST(request: Request) {
                     <p style="font-size: 12px; color: #666;">If you have any questions, please contact us.</p>
                 </div>
             `,
-        };
-
-        // We don't await the email sending to speed up the response, or we can await it to ensure delivery.
-        // For critical confirmations, awaiting is better to report errors.
-        try {
-            await transporter.sendMail(mailOptions);
-        } catch (emailError) {
-            console.error('Error sending email:', emailError);
-            // We still return success for the registration, but log the email error
-        }
+            });
         }
 
         return NextResponse.json({ message: 'Registration successful!' }, { status: 201 });

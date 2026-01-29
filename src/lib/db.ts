@@ -11,7 +11,7 @@ export async function getDb() {
   }
 
   const dbPath = path.join(process.cwd(), 'registrations.db');
-  
+
   db = await open({
     filename: dbPath,
     driver: sqlite3.Database
@@ -19,10 +19,10 @@ export async function getDb() {
 
   // Check if we need to migrate (add columns or fix email constraint)
   const columns = await db.all('PRAGMA table_info(registrants)');
-  
+
   // If table doesn't exist, create it with new schema
   if (columns.length === 0) {
-      await db.exec(`
+    await db.exec(`
         CREATE TABLE registrants (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT,
@@ -35,24 +35,27 @@ export async function getDb() {
           country TEXT,
           fieldVisit BOOLEAN DEFAULT 0,
           fieldVisitLocation TEXT,
-          registrationDate DATETIME DEFAULT CURRENT_TIMESTAMP
+          registrationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+          emailSent BOOLEAN DEFAULT 0,
+          emailSentAt DATETIME
         )
       `);
   } else {
-      // Check for new columns
-      const hasFieldVisit = columns.some(c => c.name === 'fieldVisit');
-      const emailColumn = columns.find(c => c.name === 'email');
-      const isEmailNotNull = emailColumn?.notnull === 1;
+    // Check for new columns
+    const hasFieldVisit = columns.some(c => c.name === 'fieldVisit');
+    const emailColumn = columns.find(c => c.name === 'email');
+    const isEmailNotNull = emailColumn?.notnull === 1;
+    const hasEmailSent = columns.some(c => c.name === 'emailSent');
 
-      // If we need to migrate (missing columns or email is NOT NULL)
-      if (!hasFieldVisit || isEmailNotNull) {
-          console.log('Migrating database schema...');
-          
-          await db.exec('BEGIN TRANSACTION');
-          
-          try {
-              // Create new table with correct schema
-              await db.exec(`
+    // If we need to migrate (missing columns or email is NOT NULL)
+    if (!hasFieldVisit || isEmailNotNull || !hasEmailSent) {
+      console.log('Migrating database schema...');
+
+      await db.exec('BEGIN TRANSACTION');
+
+      try {
+        // Create new table with correct schema
+        await db.exec(`
                 CREATE TABLE registrants_new (
                   id INTEGER PRIMARY KEY AUTOINCREMENT,
                   title TEXT,
@@ -65,15 +68,17 @@ export async function getDb() {
                   country TEXT,
                   fieldVisit BOOLEAN DEFAULT 0,
                   fieldVisitLocation TEXT,
-                  registrationDate DATETIME DEFAULT CURRENT_TIMESTAMP
+                  registrationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+                  emailSent BOOLEAN DEFAULT 0,
+                  emailSentAt DATETIME
                 )
               `);
 
-              // Copy data
-              // We construct the INSERT dynamically based on what columns existed
-              // But standard columns (title...registrationDate) should be there.
-              // Note: fieldVisit and fieldVisitLocation will be null/default for old records.
-              await db.exec(`
+        // Copy data
+        // We construct the INSERT dynamically based on what columns existed
+        // But standard columns (title...registrationDate) should be there.
+        // Note: fieldVisit and fieldVisitLocation will be null/default for old records.
+        await db.exec(`
                 INSERT INTO registrants_new (
                     id, title, firstName, lastName, email, phone, organization, 
                     jobTitle, country, registrationDate
@@ -84,23 +89,23 @@ export async function getDb() {
                 FROM registrants
               `);
 
-              await db.exec('DROP TABLE registrants');
-              await db.exec('ALTER TABLE registrants_new RENAME TO registrants');
-              
-              await db.exec('COMMIT');
-              console.log('Migration successful');
-          } catch (error) {
-              console.error('Migration failed:', error);
-              await db.exec('ROLLBACK');
-              throw error;
-          }
+        await db.exec('DROP TABLE registrants');
+        await db.exec('ALTER TABLE registrants_new RENAME TO registrants');
+
+        await db.exec('COMMIT');
+        console.log('Migration successful');
+      } catch (error) {
+        console.error('Migration failed:', error);
+        await db.exec('ROLLBACK');
+        throw error;
       }
+    }
   }
 
   // Check for users table and create/seed if necessary
   const userColumns = await db.all('PRAGMA table_info(users)');
   if (userColumns.length === 0) {
-      await db.exec(`
+    await db.exec(`
         CREATE TABLE users (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           username TEXT UNIQUE NOT NULL,
@@ -109,13 +114,13 @@ export async function getDb() {
           createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
         )
       `);
-      
-      // Seed default admin
-      await db.run(
-          'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
-          'admin', 'pass', 'admin'
-      );
-      console.log('Users table created and seeded with default admin.');
+
+    // Seed default admin
+    await db.run(
+      'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
+      'admin', 'pass', 'admin'
+    );
+    console.log('Users table created and seeded with default admin.');
   }
 
   return db;

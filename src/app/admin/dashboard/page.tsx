@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Users, LayoutDashboard, FileText, UserPlus, LogOut, Search, Printer, Key, Trash2 } from 'lucide-react';
+import { Users, LayoutDashboard, FileText, UserPlus, LogOut, Search, Printer, Key, Trash2, Mail, CheckCircle, XCircle } from 'lucide-react';
 import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 import Modal from '../../../components/ui/Modal';
@@ -16,6 +16,7 @@ type Registrant = {
     organization: string;
     country: string;
     registrationDate: string;
+    emailSent?: boolean;
 };
 
 type User = {
@@ -32,7 +33,12 @@ const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('dashboard');
     const [role, setRole] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
-    
+
+    // Email & Selection State
+    const [selectedRegistrants, setSelectedRegistrants] = useState<Set<number>>(new Set());
+    const [emailSending, setEmailSending] = useState(false);
+    const [bulkActionStatus, setBulkActionStatus] = useState('');
+
     // New User Form State
     const [newUserUsername, setNewUserUsername] = useState('');
     const [newUserPassword, setNewUserPassword] = useState('');
@@ -157,7 +163,7 @@ const AdminDashboard = () => {
 
             if (res.ok) {
                 setResetSuccess('Password updated successfully');
-                setTimeout(() => setResetUserId(null), 1500); 
+                setTimeout(() => setResetUserId(null), 1500);
             } else {
                 setResetError('Failed to update password');
             }
@@ -196,7 +202,7 @@ const AdminDashboard = () => {
             });
 
             if (res.ok) {
-                 setUsers(users.filter(u => u.id !== userId));
+                setUsers(users.filter(u => u.id !== userId));
             } else {
                 alert('Failed to delete user');
             }
@@ -229,7 +235,67 @@ const AdminDashboard = () => {
         }
     };
 
-    const filteredRegistrants = registrants.filter(reg =>  
+    const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.checked) {
+            const allIds = new Set(filteredRegistrants.map(r => r.id));
+            setSelectedRegistrants(allIds);
+        } else {
+            setSelectedRegistrants(new Set());
+        }
+    };
+
+    const handleSelectOne = (id: number) => {
+        const newSelected = new Set(selectedRegistrants);
+        if (newSelected.has(id)) {
+            newSelected.delete(id);
+        } else {
+            newSelected.add(id);
+        }
+        setSelectedRegistrants(newSelected);
+    };
+
+    const handleSendEmails = async (sendToAllPending = false) => {
+        if (!sendToAllPending && selectedRegistrants.size === 0) return;
+
+        const count = sendToAllPending ? 'all pending' : selectedRegistrants.size;
+        if (!confirm(`Are you sure you want to send confirmation emails to ${count} registrants?`)) return;
+
+        setEmailSending(true);
+        setBulkActionStatus('Sending emails...');
+
+        try {
+            const res = await fetch('/api/admin/emails/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ids: Array.from(selectedRegistrants),
+                    sendToAllPending
+                })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                setBulkActionStatus(data.message);
+                setSelectedRegistrants(new Set()); // Clear selection
+                // Refresh data to show updated status
+                const regResponse = await fetch('/api/admin/registrants');
+                const regData = await regResponse.json();
+                setRegistrants(regData);
+            } else {
+                setBulkActionStatus(`Error: ${data.error}`);
+            }
+        } catch (error) {
+            setBulkActionStatus('Failed to send emails');
+            console.error(error);
+        } finally {
+            setEmailSending(false);
+            // Clear status after 5 seconds
+            setTimeout(() => setBulkActionStatus(''), 5000);
+        }
+    };
+
+    const filteredRegistrants = registrants.filter(reg =>
         reg.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reg.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         reg.organization.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -262,13 +328,13 @@ const AdminDashboard = () => {
                         </div>
                     </div>
                 </div>
-                 <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+                <div className="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-gray-500 text-sm">Organizations</p>
                             <p className="text-3xl font-bold">{new Set(registrants.map(r => r.organization)).size}</p>
                         </div>
-                         <div className="bg-blue-500 rounded-full p-2 bg-opacity-20 text-blue-500">
+                        <div className="bg-blue-500 rounded-full p-2 bg-opacity-20 text-blue-500">
                             🏢
                         </div>
                     </div>
@@ -302,9 +368,9 @@ const AdminDashboard = () => {
             <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold text-gray-800">Registrants</h2>
                 <div className="relative">
-                    <Input 
+                    <Input
                         name="search"
-                        placeholder="Search..." 
+                        placeholder="Search..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="pl-10"
@@ -313,21 +379,75 @@ const AdminDashboard = () => {
                 </div>
             </div>
 
+            {/* Bulk Actions Bar */}
+            <div className="bg-white p-4 rounded-lg shadow border border-gray-200 flex flex-wrap gap-4 items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-600 font-medium">Bulk Actions:</span>
+                    {selectedRegistrants.size > 0 ? (
+                        <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">{selectedRegistrants.size} selected</span>
+                    ) : (
+                        <span className="text-sm text-gray-400 italic">Select items to enable</span>
+                    )}
+                </div>
+                <div className="flex gap-2">
+                    <Button
+                        onClick={() => handleSendEmails(false)}
+                        variant="primary"
+                        disabled={selectedRegistrants.size === 0 || emailSending}
+                        className="text-sm py-1 px-3"
+                    >
+                        <Mail size={16} className="mr-2" />
+                        {emailSending ? 'Sending...' : 'Send to Selected'}
+                    </Button>
+                    <Button
+                        onClick={() => handleSendEmails(true)}
+                        variant="outline"
+                        disabled={emailSending}
+                        className="text-sm py-1 px-3"
+                    >
+                        <Mail size={16} className="mr-2" />
+                        Send to All Pending
+                    </Button>
+                </div>
+            </div>
+            {bulkActionStatus && (
+                <div className={`p-3 rounded text-sm ${bulkActionStatus.startsWith('Error') || bulkActionStatus.startsWith('Failed') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                    {bulkActionStatus}
+                </div>
+            )}
+
             <div className="bg-white rounded-lg shadow overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
+                                <th className="px-6 py-3 text-left">
+                                    <input
+                                        type="checkbox"
+                                        onChange={handleSelectAll}
+                                        checked={filteredRegistrants.length > 0 && selectedRegistrants.size === filteredRegistrants.length}
+                                        className="h-4 w-4 text-brand-green border-gray-300 rounded focus:ring-brand-green"
+                                    />
+                                </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organization</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Country</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                             {filteredRegistrants.map((reg) => (
                                 <tr key={reg.id} className="hover:bg-gray-50">
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedRegistrants.has(reg.id)}
+                                            onChange={() => handleSelectOne(reg.id)}
+                                            className="h-4 w-4 text-brand-green border-gray-300 rounded focus:ring-brand-green"
+                                        />
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="text-sm font-medium text-gray-900">
                                             {reg.title} {reg.firstName} {reg.lastName}
@@ -336,16 +456,27 @@ const AdminDashboard = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{reg.organization}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{reg.country}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{reg.email}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                                        {reg.emailSent ? (
+                                            <div className="flex items-center text-green-600 font-medium" title="Email confirmation sent">
+                                                <CheckCircle size={18} className="mr-1" /> Sent
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center text-gray-400 font-medium" title="Not Sent">
+                                                <XCircle size={18} className="mr-1" /> Pending
+                                            </div>
+                                        )}
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div className="flex gap-3">
-                                            <button 
+                                            <button
                                                 onClick={() => handlePrint(reg.id)}
                                                 className="text-brand-green hover:text-brand-gold flex items-center gap-1"
                                                 title="Print Badge"
                                             >
                                                 <Printer size={16} /> Print
                                             </button>
-                                            <button 
+                                            <button
                                                 onClick={() => handleDeleteRegistrant(reg.id)}
                                                 className="text-red-600 hover:text-red-800 flex items-center gap-1"
                                                 title="Delete Registrant"
@@ -371,18 +502,18 @@ const AdminDashboard = () => {
     const renderUserManagement = () => (
         <div className="space-y-6">
             <h2 className="text-2xl font-bold text-gray-800">User Management</h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Create User Form */}
                 <div className="bg-white p-6 rounded-lg shadow-md">
                     <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><UserPlus size={20} /> Create New User</h3>
                     {userError && <div className="p-3 mb-4 bg-red-100 text-red-700 rounded text-sm">{userError}</div>}
                     {userSuccess && <div className="p-3 mb-4 bg-green-100 text-green-700 rounded text-sm">{userSuccess}</div>}
-                    
+
                     <form onSubmit={handleCreateUser} className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                            <Input 
+                            <Input
                                 name="newUsername"
                                 value={newUserUsername}
                                 onChange={(e) => setNewUserUsername(e.target.value)}
@@ -391,7 +522,7 @@ const AdminDashboard = () => {
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                            <Input 
+                            <Input
                                 type="password"
                                 name="newPassword"
                                 value={newUserPassword}
@@ -401,7 +532,7 @@ const AdminDashboard = () => {
                         </div>
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-                            <select 
+                            <select
                                 value={newUserRole}
                                 onChange={(e) => setNewUserRole(e.target.value)}
                                 className="w-full rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring focus:ring-brand-green focus:ring-opacity-50 p-2 border"
@@ -429,9 +560,9 @@ const AdminDashboard = () => {
                                         value={u.role}
                                         onChange={(e) => handleRoleChange(u.id, e.target.value)}
                                         className={`mt-1 text-xs font-medium capitalize rounded border-0 py-0.5 pl-2 pr-6 cursor-pointer focus:ring-2 focus:ring-brand-green sm:text-xs
-                                            ${u.role === 'admin' ? 'bg-purple-100 text-purple-800' : 
-                                              u.role === 'manager' ? 'bg-blue-100 text-blue-800' : 
-                                              'bg-green-100 text-green-800'}`}
+                                            ${u.role === 'admin' ? 'bg-purple-100 text-purple-800' :
+                                                u.role === 'manager' ? 'bg-blue-100 text-blue-800' :
+                                                    'bg-green-100 text-green-800'}`}
                                     >
                                         <option value="media">media</option>
                                         <option value="manager">manager</option>
@@ -463,16 +594,16 @@ const AdminDashboard = () => {
                 </div>
             </div>
 
-             {/* Password Reset Modal */}
-             <Modal
+            {/* Password Reset Modal */}
+            <Modal
                 isOpen={!!resetUserId}
                 onClose={() => setResetUserId(null)}
                 title={`Reset Password for ${resetUsername}`}
             >
                 <form onSubmit={handlePasswordReset} className="space-y-4">
-                     {resetError && <div className="p-3 bg-red-100 text-red-700 rounded text-sm">{resetError}</div>}
-                     {resetSuccess && <div className="p-3 bg-green-100 text-green-700 rounded text-sm">{resetSuccess}</div>}
-                    
+                    {resetError && <div className="p-3 bg-red-100 text-red-700 rounded text-sm">{resetError}</div>}
+                    {resetSuccess && <div className="p-3 bg-green-100 text-green-700 rounded text-sm">{resetSuccess}</div>}
+
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
                         <Input
@@ -510,22 +641,22 @@ const AdminDashboard = () => {
                     <h1 className="text-xl font-bold text-brand-gold">GTCIS Admin</h1>
                 </div>
                 <nav className="p-4 space-y-2">
-                    <button 
+                    <button
                         onClick={() => setActiveTab('dashboard')}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'dashboard' ? 'bg-brand-green text-white' : 'hover:bg-gray-800 text-gray-400'}`}
                     >
                         <LayoutDashboard size={20} /> Dashboard
                     </button>
-                    
-                    <button 
+
+                    <button
                         onClick={() => setActiveTab('registrants')}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'registrants' ? 'bg-brand-green text-white' : 'hover:bg-gray-800 text-gray-400'}`}
                     >
                         <FileText size={20} /> Registrants
                     </button>
-                    
+
                     {role === 'admin' && (
-                        <button 
+                        <button
                             onClick={() => setActiveTab('users')}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'users' ? 'bg-brand-green text-white' : 'hover:bg-gray-800 text-gray-400'}`}
                         >
@@ -534,7 +665,7 @@ const AdminDashboard = () => {
                     )}
                 </nav>
                 <div className="p-4 mt-auto border-t border-gray-800 absolute bottom-0 w-64">
-                    <button 
+                    <button
                         onClick={handleLogout}
                         className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-gray-800 rounded-lg transition-colors"
                     >
