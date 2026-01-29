@@ -62,6 +62,15 @@ const AdminDashboard = () => {
     // Registrant Detail View State
     const [selectedRegistrant, setSelectedRegistrant] = useState<Registrant | null>(null);
 
+    // Filter, Sort, and Pagination State
+    const [countryFilter, setCountryFilter] = useState('');
+    const [emailStatusFilter, setEmailStatusFilter] = useState('');
+    const [fieldVisitFilter, setFieldVisitFilter] = useState('');
+    const [sortColumn, setSortColumn] = useState<keyof Registrant | ''>('registrationDate');
+    const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(25);
+
     const router = useRouter();
 
     useEffect(() => {
@@ -244,12 +253,13 @@ const AdminDashboard = () => {
     };
 
     const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newSelected = new Set(selectedRegistrants);
         if (e.target.checked) {
-            const allIds = new Set(filteredRegistrants.map(r => r.id));
-            setSelectedRegistrants(allIds);
+            paginatedRegistrants.forEach(r => newSelected.add(r.id));
         } else {
-            setSelectedRegistrants(new Set());
+            paginatedRegistrants.forEach(r => newSelected.delete(r.id));
         }
+        setSelectedRegistrants(newSelected);
     };
 
     const handleSelectOne = (id: number) => {
@@ -303,11 +313,123 @@ const AdminDashboard = () => {
         }
     };
 
-    const filteredRegistrants = registrants.filter(reg =>
-        (reg.firstName ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (reg.lastName ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (reg.organization ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (reg.email ?? '').toLowerCase().includes(searchTerm.toLowerCase())
+    // Helper: Generate CSV and download
+    const downloadCSV = (data: Registrant[], filename: string) => {
+        const headers = [
+            'ID', 'Title', 'First Name', 'Last Name', 'Email', 'Phone',
+            'Organization', 'Job Title', 'Country', 'Field Visit', 'Field Visit Location',
+            'Registration Date', 'Email Sent', 'Email Sent At'
+        ];
+
+        const csvRows = [
+            headers.join(','),
+            ...data.map(reg => [
+                reg.id,
+                reg.title || '',
+                reg.firstName,
+                reg.lastName,
+                reg.email || '',
+                reg.phone,
+                `"${reg.organization}"`, // Quoted in case of commas
+                reg.jobTitle || '',
+                reg.country,
+                reg.fieldVisit ? 'Yes' : 'No',
+                reg.fieldVisitLocation || '',
+                new Date(reg.registrationDate).toLocaleString(),
+                reg.emailSent ? 'Yes' : 'No',
+                reg.emailSentAt ? new Date(reg.emailSentAt).toLocaleString() : ''
+            ].join(','))
+        ];
+
+        const csvString = csvRows.join('\n');
+        const blob = new Blob([csvString], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    };
+
+    const handleExportAll = () => {
+        downloadCSV(filteredAndSortedRegistrants, `registrants_all_${new Date().toISOString().split('T')[0]}.csv`);
+    };
+
+    const handleExportFieldVisit = () => {
+        const fieldVisitRegistrants = registrants.filter(reg => reg.fieldVisit);
+        downloadCSV(fieldVisitRegistrants, `field_visit_participants_${new Date().toISOString().split('T')[0]}.csv`);
+    };
+
+    const handleSort = (column: keyof Registrant) => {
+        if (sortColumn === column) {
+            setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortColumn(column);
+            setSortDirection('asc');
+        }
+        setCurrentPage(1); // Reset to first page when sorting
+    };
+
+    // Get unique countries for filter dropdown
+    const uniqueCountries = Array.from(new Set(registrants.map(r => r.country).filter(Boolean))).sort();
+
+    // Apply all filters
+    const filteredRegistrants = registrants.filter(reg => {
+        // Search filter
+        const matchesSearch = (
+            (reg.firstName ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (reg.lastName ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (reg.organization ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (reg.email ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (reg.phone ?? '').toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        // Country filter
+        const matchesCountry = !countryFilter || reg.country === countryFilter;
+
+        // Email status filter
+        const matchesEmailStatus = !emailStatusFilter ||
+            (emailStatusFilter === 'sent' && reg.emailSent) ||
+            (emailStatusFilter === 'pending' && !reg.emailSent);
+
+        // Field visit filter
+        const matchesFieldVisit = !fieldVisitFilter ||
+            (fieldVisitFilter === 'yes' && reg.fieldVisit) ||
+            (fieldVisitFilter === 'no' && !reg.fieldVisit);
+
+        return matchesSearch && matchesCountry && matchesEmailStatus && matchesFieldVisit;
+    });
+
+    // Apply sorting
+    const filteredAndSortedRegistrants = [...filteredRegistrants].sort((a, b) => {
+        if (!sortColumn) return 0;
+
+        const aValue = a[sortColumn];
+        const bValue = b[sortColumn];
+
+        // Handle null/undefined
+        if (aValue == null && bValue == null) return 0;
+        if (aValue == null) return 1;
+        if (bValue == null) return -1;
+
+        // Compare values
+        let comparison = 0;
+        if (typeof aValue === 'string' && typeof bValue === 'string') {
+            comparison = aValue.toLowerCase().localeCompare(bValue.toLowerCase());
+        } else if (typeof aValue === 'number' && typeof bValue === 'number') {
+            comparison = aValue - bValue;
+        } else {
+            comparison = String(aValue).localeCompare(String(bValue));
+        }
+
+        return sortDirection === 'asc' ? comparison : -comparison;
+    });
+
+    // Apply pagination
+    const totalPages = Math.ceil(filteredAndSortedRegistrants.length / pageSize);
+    const paginatedRegistrants = filteredAndSortedRegistrants.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize
     );
 
     if (loading) return <div className="flex justify-center items-center h-screen"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-green"></div></div>;
@@ -375,16 +497,112 @@ const AdminDashboard = () => {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold text-gray-800">Registrants</h2>
-                <div className="relative">
-                    <Input
-                        name="search"
-                        placeholder="Search..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10"
-                    />
-                    <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+            </div>
+
+            {/* Filters and Export Row */}
+            <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+                    {/* Search */}
+                    <div className="lg:col-span-2">
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Search</label>
+                        <div className="relative">
+                            <Input
+                                name="search"
+                                placeholder="Name, email, phone, org..."
+                                value={searchTerm}
+                                onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+                                className="pl-10"
+                            />
+                            <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                        </div>
+                    </div>
+
+                    {/* Country Filter */}
+                    <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Country</label>
+                        <select
+                            value={countryFilter}
+                            onChange={(e) => { setCountryFilter(e.target.value); setCurrentPage(1); }}
+                            className="w-full rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring focus:ring-brand-green focus:ring-opacity-50 p-2 border text-sm"
+                        >
+                            <option value="">All Countries</option>
+                            {uniqueCountries.map(country => (
+                                <option key={country} value={country}>{country}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Email Status Filter */}
+                    <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Email Status</label>
+                        <select
+                            value={emailStatusFilter}
+                            onChange={(e) => { setEmailStatusFilter(e.target.value); setCurrentPage(1); }}
+                            className="w-full rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring focus:ring-brand-green focus:ring-opacity-50 p-2 border text-sm"
+                        >
+                            <option value="">All</option>
+                            <option value="sent">Sent</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+
+                    {/* Field Visit Filter */}
+                    <div>
+                        <label className="block text-xs font-medium text-gray-700 mb-1">Field Visit</label>
+                        <select
+                            value={fieldVisitFilter}
+                            onChange={(e) => { setFieldVisitFilter(e.target.value); setCurrentPage(1); }}
+                            className="w-full rounded-md border-gray-300 shadow-sm focus:border-brand-green focus:ring focus:ring-brand-green focus:ring-opacity-50 p-2 border text-sm"
+                        >
+                            <option value="">All</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    {/* Export Buttons */}
+                    <div className="flex flex-col gap-2">
+                        <Button onClick={handleExportAll} variant="outline" className="text-xs py-1">
+                            📥 Export All ({filteredAndSortedRegistrants.length})
+                        </Button>
+                        <Button onClick={handleExportFieldVisit} variant="outline" className="text-xs py-1">
+                            🚌 Field Visit ({registrants.filter(r => r.fieldVisit).length})
+                        </Button>
+                    </div>
                 </div>
+
+                {/* Active Filters Display */}
+                {(countryFilter || emailStatusFilter || fieldVisitFilter || searchTerm) && (
+                    <div className="mt-3 flex flex-wrap gap-2">
+                        <span className="text-xs text-gray-600">Active filters:</span>
+                        {searchTerm && (
+                            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                                Search: "{searchTerm}" <button onClick={() => setSearchTerm('')} className="ml-1 font-bold">×</button>
+                            </span>
+                        )}
+                        {countryFilter && (
+                            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                                Country: {countryFilter} <button onClick={() => setCountryFilter('')} className="ml-1 font-bold">×</button>
+                            </span>
+                        )}
+                        {emailStatusFilter && (
+                            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                                Email: {emailStatusFilter} <button onClick={() => setEmailStatusFilter('')} className="ml-1 font-bold">×</button>
+                            </span>
+                        )}
+                        {fieldVisitFilter && (
+                            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
+                                Field Visit: {fieldVisitFilter} <button onClick={() => setFieldVisitFilter('')} className="ml-1 font-bold">×</button>
+                            </span>
+                        )}
+                        <button
+                            onClick={() => { setSearchTerm(''); setCountryFilter(''); setEmailStatusFilter(''); setFieldVisitFilter(''); }}
+                            className="text-xs text-red-600 hover:text-red-800 font-medium"
+                        >
+                            Clear all
+                        </button>
+                    </div>
+                )}
             </div>
 
             {/* Bulk Actions Bar */}
@@ -433,20 +651,45 @@ const AdminDashboard = () => {
                                     <input
                                         type="checkbox"
                                         onChange={handleSelectAll}
-                                        checked={filteredRegistrants.length > 0 && selectedRegistrants.size === filteredRegistrants.length}
+                                        checked={paginatedRegistrants.length > 0 && paginatedRegistrants.every(r => selectedRegistrants.has(r.id))}
                                         className="h-4 w-4 text-brand-green border-gray-300 rounded focus:ring-brand-green"
                                     />
                                 </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organization</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Country</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th
+                                    onClick={() => handleSort('firstName')}
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                                >
+                                    Name {sortColumn === 'firstName' && (sortDirection === 'asc' ? '↑' : '↓')}
+                                </th>
+                                <th
+                                    onClick={() => handleSort('organization')}
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                                >
+                                    Organization {sortColumn === 'organization' && (sortDirection === 'asc' ? '↑' : '↓')}
+                                </th>
+                                <th
+                                    onClick={() => handleSort('country')}
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                                >
+                                    Country {sortColumn === 'country' && (sortDirection === 'asc' ? '↑' : '↓')}
+                                </th>
+                                <th
+                                    onClick={() => handleSort('email')}
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                                >
+                                    Email {sortColumn === 'email' && (sortDirection === 'asc' ? '↑' : '↓')}
+                                </th>
+                                <th
+                                    onClick={() => handleSort('emailSent')}
+                                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                                >
+                                    Status {sortColumn === 'emailSent' && (sortDirection === 'asc' ? '↑' : '↓')}
+                                </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {filteredRegistrants.map((reg) => (
+                            {paginatedRegistrants.map((reg) => (
                                 <tr key={reg.id} className="hover:bg-gray-50">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <input
@@ -502,14 +745,73 @@ const AdminDashboard = () => {
                                     </td>
                                 </tr>
                             ))}
-                            {filteredRegistrants.length === 0 && (
+                            {paginatedRegistrants.length === 0 && (
                                 <tr>
-                                    <td colSpan={5} className="px-6 py-10 text-center text-gray-500">No results found</td>
+                                    <td colSpan={7} className="px-6 py-10 text-center text-gray-500">No results found</td>
                                 </tr>
                             )}
                         </tbody>
                     </table>
                 </div>
+
+                {/* Pagination Controls */}
+                {filteredAndSortedRegistrants.length > 0 && (
+                    <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <span className="text-sm text-gray-700">
+                                Showing <span className="font-medium">{(currentPage - 1) * pageSize + 1}</span> to{' '}
+                                <span className="font-medium">{Math.min(currentPage * pageSize, filteredAndSortedRegistrants.length)}</span> of{' '}
+                                <span className="font-medium">{filteredAndSortedRegistrants.length}</span> results
+                            </span>
+                            <select
+                                value={pageSize}
+                                onChange={(e) => { setPageSize(Number(e.target.value)); setCurrentPage(1); }}
+                                className="rounded-md border-gray-300 text-sm p-1"
+                            >
+                                <option value={10}>10 per page</option>
+                                <option value={25}>25 per page</option>
+                                <option value={50}>50 per page</option>
+                                <option value={100}>100 per page</option>
+                            </select>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setCurrentPage(1)}
+                                disabled={currentPage === 1}
+                                className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                First
+                            </button>
+                            <button
+                                onClick={() => setCurrentPage(p => p - 1)}
+                                disabled={currentPage === 1}
+                                className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Previous
+                            </button>
+
+                            <span className="text-sm text-gray-700">
+                                Page <span className="font-medium">{currentPage}</span> of <span className="font-medium">{totalPages}</span>
+                            </span>
+
+                            <button
+                                onClick={() => setCurrentPage(p => p + 1)}
+                                disabled={currentPage === totalPages}
+                                className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Next
+                            </button>
+                            <button
+                                onClick={() => setCurrentPage(totalPages)}
+                                disabled={currentPage === totalPages}
+                                className="px-3 py-1 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                Last
+                            </button>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
