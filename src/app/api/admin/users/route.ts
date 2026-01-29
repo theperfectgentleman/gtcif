@@ -1,24 +1,25 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '../../../../lib/db';
 import { cookies } from 'next/headers';
+import { hashPassword } from '../../../../lib/auth';
 
 export async function GET() {
     const cookieStore = await cookies();
     const role = cookieStore.get('admin_role')?.value;
-    
+
     if (role !== 'admin') {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
-    const db = await getDb();
-    const users = await db.all('SELECT id, username, role, createdAt FROM users');
-    return NextResponse.json(users);
+    const db = getDb();
+    const result = await db.query('SELECT id, username, role, createdAt FROM users');
+    return NextResponse.json(result.rows);
 }
 
 export async function POST(request: Request) {
     const cookieStore = await cookies();
     const role = cookieStore.get('admin_role')?.value;
-    
+
     if (role !== 'admin') {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
@@ -30,26 +31,28 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
     }
 
-    const db = await getDb();
+    const db = getDb();
+    const hashedPassword = hashPassword(password);
+
     try {
         console.log(`Attempting to create user: ${username} with role: ${newRole}`);
-        await db.run(
-            'INSERT INTO users (username, password, role) VALUES (?, ?, ?)',
-            username, password, newRole
+        await db.query(
+            'INSERT INTO users (username, password, role) VALUES ($1, $2, $3)',
+            [username, hashedPassword, newRole]
         );
         console.log(`User ${username} created successfully`);
         return NextResponse.json({ success: true });
     } catch (error) {
-         console.error('Error creating user:', error);
-         // This works for sqlite 'unique' error usually, but message format depends on driver version
-         return NextResponse.json({ success: false, error: 'Could not create user. Username might exist.' }, { status: 400 });
+        console.error('Error creating user:', error);
+        // This works for sqlite 'unique' error usually, but message format depends on driver version
+        return NextResponse.json({ success: false, error: 'Could not create user. Username might exist.' }, { status: 400 });
     }
 }
 
 export async function PUT(request: Request) {
     const cookieStore = await cookies();
     const role = cookieStore.get('admin_role')?.value;
-    
+
     if (role !== 'admin') {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
@@ -61,9 +64,11 @@ export async function PUT(request: Request) {
         return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
     }
 
-    const db = await getDb();
+    const db = getDb();
+    const hashedPassword = hashPassword(password);
+
     try {
-        await db.run('UPDATE users SET password = ? WHERE id = ?', password, id);
+        await db.query('UPDATE users SET password = $1 WHERE id = $2', [hashedPassword, id]);
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error('Error updating password:', error);
@@ -74,7 +79,7 @@ export async function PUT(request: Request) {
 export async function PATCH(request: Request) {
     const cookieStore = await cookies();
     const role = cookieStore.get('admin_role')?.value;
-    
+
     if (role !== 'admin') {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
@@ -86,9 +91,9 @@ export async function PATCH(request: Request) {
         return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
     }
 
-    const db = await getDb();
+    const db = getDb();
     try {
-        await db.run('UPDATE users SET role = ? WHERE id = ?', newRole, id);
+        await db.query('UPDATE users SET role = $1 WHERE id = $2', [newRole, id]);
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error('Error updating role:', error);
@@ -99,7 +104,7 @@ export async function PATCH(request: Request) {
 export async function DELETE(request: Request) {
     const cookieStore = await cookies();
     const role = cookieStore.get('admin_role')?.value;
-    
+
     if (role !== 'admin') {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
@@ -111,9 +116,9 @@ export async function DELETE(request: Request) {
         return NextResponse.json({ error: 'Missing user ID' }, { status: 400 });
     }
 
-    const db = await getDb();
+    const db = getDb();
     try {
-        await db.run('DELETE FROM users WHERE id = ?', id);
+        await db.query('DELETE FROM users WHERE id = $1', [id]);
         return NextResponse.json({ success: true });
     } catch {
         return NextResponse.json({ error: 'Database error' }, { status: 500 });

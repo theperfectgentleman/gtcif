@@ -12,9 +12,10 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     }
 
     try {
-        const db = await getDb();
-        const registrant = await db.get('SELECT * FROM registrants WHERE id = ?', id);
-        
+        const db = getDb();
+        const result = await db.query('SELECT * FROM registrants WHERE id = $1', [id]);
+        const registrant = result.rows[0];
+
         if (!registrant) {
             return NextResponse.json({ error: 'Not found' }, { status: 404 });
         }
@@ -35,8 +36,8 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     }
 
     try {
-        const db = await getDb();
-        await db.run('DELETE FROM registrants WHERE id = ?', id);
+        const db = getDb();
+        await db.query('DELETE FROM registrants WHERE id = $1', [id]);
         return NextResponse.json({ success: true });
     } catch {
         return NextResponse.json({ error: 'Database error' }, { status: 500 });

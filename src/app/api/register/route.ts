@@ -23,22 +23,21 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
         }
 
-        const db = await getDb();
+        const db = getDb();
 
         // Handle empty email as null for unique constraint
         const emailValue = email && email.trim() !== '' ? email : null;
 
         // Insert into database
         try {
-            await db.run(
+            await db.query(
                 `INSERT INTO registrants (
                     title, firstName, lastName, email, phone, organization, jobTitle, country, fieldVisit, fieldVisitLocation
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
                 [title, firstName, lastName, emailValue, phone, organization, jobTitle, country, fieldVisit ? 1 : 0, fieldVisitLocation]
             );
-        } catch (dbError: unknown) {
-            const message = dbError instanceof Error ? dbError.message : '';
-            if (message && message.includes('UNIQUE constraint failed') && emailValue) {
+        } catch (dbError: any) { // Type as any to access code property easily
+            if (dbError.code === '23505' && emailValue) { // Postgres unique violation code
                 return NextResponse.json({ error: 'This email is already registered.' }, { status: 400 });
             }
             throw dbError;

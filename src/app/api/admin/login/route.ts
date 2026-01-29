@@ -1,12 +1,17 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '../../../../lib/db';
+import { hashPassword } from '../../../../lib/auth';
 
 export async function POST(request: Request) {
     const body = await request.json();
     const { username, password } = body;
 
-    const db = await getDb();
-    const user = await db.get('SELECT * FROM users WHERE username = ? AND password = ?', username, password);
+    const db = getDb();
+    const hashedPassword = hashPassword(password);
+
+    // Check for hashed password
+    const result = await db.query('SELECT * FROM users WHERE username = $1 AND password = $2', [username, hashedPassword]);
+    const user = result.rows[0];
 
     if (user) {
         const response = NextResponse.json({ success: true, role: user.role, username: user.username });
@@ -20,7 +25,7 @@ export async function POST(request: Request) {
 
         // This cookie allows client to easily check role for UI
         response.cookies.set('admin_role', user.role, {
-            httpOnly: false, 
+            httpOnly: false,
             path: '/',
             maxAge: oneDay,
         });

@@ -14,16 +14,17 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
         const { ids, sendToAllPending } = body;
-        const db = await getDb();
+        const db = getDb();
 
         let registrantsToSend: any[] = [];
 
         if (sendToAllPending) {
-            registrantsToSend = await db.all('SELECT * FROM registrants WHERE emailSent = 0 OR emailSent IS NULL');
+            const result = await db.query('SELECT * FROM registrants WHERE emailSent = FALSE OR emailSent IS NULL');
+            registrantsToSend = result.rows;
         } else if (ids && Array.isArray(ids) && ids.length > 0) {
-            // Safe way to handle array in SQL IN clause
-            const placeholders = ids.map(() => '?').join(',');
-            registrantsToSend = await db.all(`SELECT * FROM registrants WHERE id IN (${placeholders})`, ids);
+            // Postgres ANY() is clean for arrays
+            const result = await db.query('SELECT * FROM registrants WHERE id = ANY($1)', [ids]);
+            registrantsToSend = result.rows;
         } else {
             return NextResponse.json({ error: 'No recipients specified' }, { status: 400 });
         }
@@ -60,9 +61,9 @@ export async function POST(request: Request) {
             });
 
             if (emailSuccess) {
-                await db.run(
-                    'UPDATE registrants SET emailSent = 1, emailSentAt = CURRENT_TIMESTAMP WHERE id = ?',
-                    reg.id
+                await db.query(
+                    'UPDATE registrants SET emailSent = TRUE, emailSentAt = CURRENT_TIMESTAMP WHERE id = $1',
+                    [reg.id]
                 );
                 successCount++;
             } else {
