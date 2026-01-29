@@ -54,19 +54,55 @@ export async function POST(request: Request) {
             const emailSuccess = await sendEmail({
                 to: reg.email,
                 subject: 'Registration Confirmation - GTCIS 2026',
+                text: `Registration Confirmed
+
+Dear ${reg.title ? reg.title + ' ' : ''}${reg.firstName} ${reg.lastName},
+
+Thank you for registering for the 1st Ghana Tree Crops Investment Summit (GTCIS 2026).
+
+We have received your registration details:
+- Organization: ${reg.organization ?? 'Not specified'}
+- Country: ${reg.country ?? 'Not specified'}
+
+Event Details:
+Date: February 17-20, 2026
+
+We look forward to seeing you there!
+
+NOTE: This email may have landed in your spam or junk folder. Please check there if you don't see it in your inbox, and mark it as "Not Spam" to receive future updates.
+
+If you have any questions, please contact us at ${process.env.BREVO_REPLY_TO || 'info@gtcif.com'}.
+
+Best regards,
+GTCIS 2026 Team`,
                 html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <h1 style="color: #2F855A;">Registration Confirmed</h1>
-                    <p>Dear ${reg.title ? reg.title + ' ' : ''}${reg.firstName} ${reg.lastName},</p>
-                    <p>Thank you for registering for the <strong>1st Ghana Tree Crops Investment Summit (GTCIS 2026)</strong>.</p>
-                    <p>We have received your registration details:</p>
-                    <ul>
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <h1 style="color: #2F855A; margin-bottom: 20px;">Registration Confirmed</h1>
+                    <p style="font-size: 16px; line-height: 1.6;">Dear ${reg.title ? reg.title + ' ' : ''}${reg.firstName} ${reg.lastName},</p>
+                    <p style="font-size: 16px; line-height: 1.6;">Thank you for registering for the <strong>1st Ghana Tree Crops Investment Summit (GTCIS 2026)</strong>.</p>
+                    <p style="font-size: 16px; line-height: 1.6;">We have received your registration details:</p>
+                    <ul style="font-size: 16px; line-height: 1.8;">
                         <li><strong>Organization:</strong> ${reg.organization ?? 'Not specified'}</li>
                         <li><strong>Country:</strong> ${reg.country ?? 'Not specified'}</li>
                     </ul>
-                    <p>We look forward to seeing you there!</p>
-                    <hr />
-                    <p style="font-size: 12px; color: #666;">If you have any questions, please contact us.</p>
+                    <div style="background-color: #f7fafc; border-left: 4px solid #2F855A; padding: 15px; margin: 20px 0;">
+                        <p style="margin: 0; font-size: 14px; color: #2d3748;"><strong>📅 Event Date:</strong> February 17-20, 2026</p>
+                    </div>
+                    <p style="font-size: 16px; line-height: 1.6;">We look forward to seeing you there!</p>
+                    
+                    <div style="background-color: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; padding: 12px; margin: 20px 0;">
+                        <p style="margin: 0; font-size: 13px; color: #856404;">
+                            <strong>📧 Important:</strong> This email may have landed in your spam or junk folder. Please check there if you don't see it in your inbox, and mark it as "Not Spam" to receive future updates about the summit.
+                        </p>
+                    </div>
+                    
+                    <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 30px 0;" />
+                    <p style="font-size: 12px; color: #666; line-height: 1.4;">
+                        If you have any questions, please contact us at <a href="mailto:${process.env.BREVO_REPLY_TO || 'info@gtcif.com'}" style="color: #2F855A;">${process.env.BREVO_REPLY_TO || 'info@gtcif.com'}</a>.
+                    </p>
+                    <p style="font-size: 12px; color: #999;">
+                        &copy; 2026 Ghana Tree Crops Investment Summit. All rights reserved.
+                    </p>
                 </div>
             `,
             });
