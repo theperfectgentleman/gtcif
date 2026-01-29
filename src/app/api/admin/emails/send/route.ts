@@ -61,8 +61,8 @@ export async function POST(request: Request) {
                     <p>Thank you for registering for the <strong>1st Ghana Tree Crops Investment Summit (GTCIS 2026)</strong>.</p>
                     <p>We have received your registration details:</p>
                     <ul>
-                        <li><strong>Organization:</strong> ${reg.organization}</li>
-                        <li><strong>Country:</strong> ${reg.country}</li>
+                        <li><strong>Organization:</strong> ${reg.organization ?? 'Not specified'}</li>
+                        <li><strong>Country:</strong> ${reg.country ?? 'Not specified'}</li>
                     </ul>
                     <p>We look forward to seeing you there!</p>
                     <hr />

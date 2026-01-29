@@ -34,7 +34,7 @@ export async function POST(request: Request) {
                 `INSERT INTO registrants (
                     title, firstName, lastName, email, phone, organization, jobTitle, country, fieldVisit, fieldVisitLocation
                 ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-                [title, firstName, lastName, emailValue, phone, organization, jobTitle, country, fieldVisit ? 1 : 0, fieldVisitLocation]
+                [title, firstName, lastName, emailValue, phone, organization, jobTitle, country, !!fieldVisit, fieldVisitLocation]
             );
         } catch (dbError: unknown) {
             const error = dbError as { code?: string };
@@ -56,8 +56,8 @@ export async function POST(request: Request) {
                     <p>Thank you for registering for the <strong>1st Ghana Tree Crops Investment Summit (GTCIS 2026)</strong>.</p>
                     <p>We have received your registration details:</p>
                     <ul>
-                        <li><strong>Organization:</strong> ${organization}</li>
-                        <li><strong>Country:</strong> ${country}</li>
+                        <li><strong>Organization:</strong> ${organization ?? 'Not specified'}</li>
+                        <li><strong>Country:</strong> ${country ?? 'Not specified'}</li>
                     </ul>
                     <p>We look forward to seeing you there!</p>
                     <hr />
