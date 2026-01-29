@@ -296,10 +296,10 @@ const AdminDashboard = () => {
     };
 
     const filteredRegistrants = registrants.filter(reg =>
-        reg.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        reg.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        reg.organization.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        reg.email.toLowerCase().includes(searchTerm.toLowerCase())
+        (reg.firstName ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (reg.lastName ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (reg.organization ?? '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (reg.email ?? '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     if (loading) return <div className="flex justify-center items-center h-screen"><div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-green"></div></div>;
@@ -321,7 +321,7 @@ const AdminDashboard = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-gray-500 text-sm">Countries Represented</p>
-                            <p className="text-3xl font-bold">{new Set(registrants.map(r => r.country)).size}</p>
+                            <p className="text-3xl font-bold">{new Set(registrants.map(r => r.country).filter(Boolean)).size}</p>
                         </div>
                         <div className="bg-brand-gold rounded-full p-2 bg-opacity-20 text-brand-gold">
                             🌍
@@ -332,7 +332,7 @@ const AdminDashboard = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-gray-500 text-sm">Organizations</p>
-                            <p className="text-3xl font-bold">{new Set(registrants.map(r => r.organization)).size}</p>
+                            <p className="text-3xl font-bold">{new Set(registrants.map(r => r.organization).filter(Boolean)).size}</p>
                         </div>
                         <div className="bg-blue-500 rounded-full p-2 bg-opacity-20 text-blue-500">
                             🏢
