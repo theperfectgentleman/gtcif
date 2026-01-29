@@ -577,7 +577,7 @@ const AdminDashboard = () => {
                         <span className="text-xs text-gray-600">Active filters:</span>
                         {searchTerm && (
                             <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
-                                Search: "{searchTerm}" <button onClick={() => setSearchTerm('')} className="ml-1 font-bold">×</button>
+                                Search: &quot;{searchTerm}&quot; <button onClick={() => setSearchTerm('')} className="ml-1 font-bold">×</button>
                             </span>
                         )}
                         {countryFilter && (
