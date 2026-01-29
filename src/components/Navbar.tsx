@@ -31,7 +31,7 @@ const Navbar = () => {
             } else {
                 setResult(data);
             }
-        } catch (err) {
+        } catch {
             setError('Failed to connect to server');
         } finally {
             setLoading(false);
@@ -176,7 +176,7 @@ const Navbar = () => {
                                         </div>
                                         <h4 className="text-lg font-bold text-gray-900 mb-1">No Registration Found</h4>
                                         <p className="text-gray-600 text-sm mb-6">
-                                            We couldn't find a registration matching "{query}".
+                                            We couldn&apos;t find a registration matching &quot;{query}&quot;.
                                         </p>
                                         <div className="flex gap-3 w-full">
                                             <button
