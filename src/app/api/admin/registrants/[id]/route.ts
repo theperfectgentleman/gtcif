@@ -20,7 +20,25 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
             return NextResponse.json({ error: 'Not found' }, { status: 404 });
         }
 
-        return NextResponse.json(registrant);
+        // Transform snake_case DB fields to camelCase for frontend
+        const transformedRegistrant = {
+            id: registrant.id,
+            title: registrant.title,
+            firstName: registrant.firstname,
+            lastName: registrant.lastname,
+            email: registrant.email,
+            phone: registrant.phone,
+            organization: registrant.organization,
+            jobTitle: registrant.jobtitle,
+            country: registrant.country,
+            fieldVisit: registrant.fieldvisit,
+            fieldVisitLocation: registrant.fieldvisitlocation,
+            registrationDate: registrant.registrationdate,
+            emailSent: registrant.emailsent,
+            emailSentAt: registrant.emailsentat
+        };
+
+        return NextResponse.json(transformedRegistrant);
     } catch {
         return NextResponse.json({ error: 'Database error' }, { status: 500 });
     }
