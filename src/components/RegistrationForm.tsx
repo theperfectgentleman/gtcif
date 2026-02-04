@@ -2,14 +2,14 @@
 
 import React, { useState } from 'react';
 import Button from './ui/Button';
-import { 
-    User, 
-    Mail, 
-    Phone, 
-    Building2, 
-    Briefcase, 
-    Globe, 
-    MapPin, 
+import {
+    User,
+    Mail,
+    Phone,
+    Building2,
+    Briefcase,
+    Globe,
+    MapPin,
     Calendar,
     CheckCircle2,
     Sprout,
@@ -309,6 +309,7 @@ type FormData = {
     country: string;
     fieldVisit: boolean;
     fieldVisitLocation: string;
+    confRole: string;
 };
 
 type Errors = Partial<Record<keyof FormData | 'submit', string>>;
@@ -325,28 +326,29 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
         country: 'Ghana',
         fieldVisit: false,
         fieldVisitLocation: '',
+        confRole: '',
     });
 
     const [errors, setErrors] = useState<Errors>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
-    
+
     // Check if field visit registration is closed
     const isFieldVisitClosed = new Date() > FIELD_VISIT_DEADLINE;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value, type } = e.target;
-        
+
         if (type === 'checkbox') {
-             const checked = (e.target as HTMLInputElement).checked;
-             setFormData((prev) => ({ ...prev, [name]: checked }));
+            const checked = (e.target as HTMLInputElement).checked;
+            setFormData((prev) => ({ ...prev, [name]: checked }));
         } else {
-             setFormData((prev) => ({ ...prev, [name]: value }));
+            setFormData((prev) => ({ ...prev, [name]: value }));
         }
     };
 
     const handleFieldVisitChange = (isJoining: boolean) => {
-        setFormData(prev => ({ 
-            ...prev, 
+        setFormData(prev => ({
+            ...prev,
             fieldVisit: isJoining,
             fieldVisitLocation: isJoining ? prev.fieldVisitLocation : '' // clear location if not joining
         }));
@@ -368,11 +370,12 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
         if (!formData.phone) newErrors.phone = 'Phone number is required';
         if (!formData.organization) newErrors.organization = 'Organization is required';
         if (!formData.country) newErrors.country = 'Country is required';
-        
+        if (!formData.confRole) newErrors.confRole = 'Conference Role is required';
+
         if (formData.fieldVisit && !formData.fieldVisitLocation) {
             newErrors.fieldVisitLocation = 'Please select a location for the field visit';
         }
-        
+
         return newErrors;
     };
 
@@ -453,7 +456,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                             </div>
                             <h3 className="text-lg font-bold text-brand-black uppercase tracking-tight">Personal Details</h3>
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                             {/* Title */}
                             <div className="md:col-span-2">
@@ -474,7 +477,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                                         <option value="Hon">Hon</option>
                                     </select>
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
                                     </div>
                                 </div>
                             </div>
@@ -487,11 +490,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                                     value={formData.firstName}
                                     onChange={handleChange}
                                     placeholder="Enter your first name"
-                                    className={`w-full h-[50px] px-4 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${
-                                        errors.firstName 
-                                        ? 'border-red-300 focus:ring-red-100 focus:border-red-500' 
+                                    className={`w-full h-[50px] px-4 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${errors.firstName
+                                        ? 'border-red-300 focus:ring-red-100 focus:border-red-500'
                                         : 'border-gray-200 focus:ring-brand-green/20 focus:border-brand-green'
-                                    }`}
+                                        }`}
                                 />
                                 {errors.firstName && <p className="text-xs text-red-500 font-bold mt-1">{errors.firstName}</p>}
                             </div>
@@ -504,11 +506,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                                     value={formData.lastName}
                                     onChange={handleChange}
                                     placeholder="Enter your last name"
-                                    className={`w-full h-[50px] px-4 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${
-                                        errors.lastName 
-                                        ? 'border-red-300 focus:ring-red-100 focus:border-red-500' 
+                                    className={`w-full h-[50px] px-4 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${errors.lastName
+                                        ? 'border-red-300 focus:ring-red-100 focus:border-red-500'
                                         : 'border-gray-200 focus:ring-brand-green/20 focus:border-brand-green'
-                                    }`}
+                                        }`}
                                 />
                                 {errors.lastName && <p className="text-xs text-red-500 font-bold mt-1">{errors.lastName}</p>}
                             </div>
@@ -525,7 +526,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                             </div>
                             <h3 className="text-lg font-bold text-brand-black uppercase tracking-tight">Contact Information</h3>
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Email */}
                             <div>
@@ -537,11 +538,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                                         value={formData.email}
                                         onChange={handleChange}
                                         placeholder="john.doe@example.com"
-                                        className={`w-full h-[50px] pl-11 pr-4 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${
-                                            errors.email 
-                                            ? 'border-red-300 focus:ring-red-100 focus:border-red-500' 
+                                        className={`w-full h-[50px] pl-11 pr-4 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${errors.email
+                                            ? 'border-red-300 focus:ring-red-100 focus:border-red-500'
                                             : 'border-gray-200 focus:ring-brand-green/20 focus:border-brand-green'
-                                        }`}
+                                            }`}
                                     />
                                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 </div>
@@ -558,11 +558,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                                         value={formData.phone}
                                         onChange={handleChange}
                                         placeholder="+233 20 123 4567"
-                                        className={`w-full h-[50px] pl-11 pr-4 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${
-                                            errors.phone 
-                                            ? 'border-red-300 focus:ring-red-100 focus:border-red-500' 
+                                        className={`w-full h-[50px] pl-11 pr-4 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${errors.phone
+                                            ? 'border-red-300 focus:ring-red-100 focus:border-red-500'
                                             : 'border-gray-200 focus:ring-brand-green/20 focus:border-brand-green'
-                                        }`}
+                                            }`}
                                     />
                                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 </div>
@@ -581,7 +580,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                             </div>
                             <h3 className="text-lg font-bold text-brand-black uppercase tracking-tight">Professional Details</h3>
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                             {/* Organization */}
                             <div className="md:col-span-6">
@@ -592,11 +591,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                                         value={formData.organization}
                                         onChange={handleChange}
                                         placeholder="Company or Organization Name"
-                                        className={`w-full h-[50px] pl-11 pr-4 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${
-                                            errors.organization 
-                                            ? 'border-red-300 focus:ring-red-100 focus:border-red-500' 
+                                        className={`w-full h-[50px] pl-11 pr-4 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${errors.organization
+                                            ? 'border-red-300 focus:ring-red-100 focus:border-red-500'
                                             : 'border-gray-200 focus:ring-brand-green/20 focus:border-brand-green'
-                                        }`}
+                                            }`}
                                     />
                                     <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
                                 </div>
@@ -635,11 +633,10 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                                         required
                                         list="country-options"
                                         placeholder="Select or type country"
-                                        className={`w-full h-[50px] pl-11 pr-10 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${
-                                            errors.country 
-                                            ? 'border-red-300 focus:ring-red-100 focus:border-red-500' 
+                                        className={`w-full h-[50px] pl-11 pr-10 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all ${errors.country
+                                            ? 'border-red-300 focus:ring-red-100 focus:border-red-500'
                                             : 'border-gray-200 focus:ring-brand-green/20 focus:border-brand-green'
-                                        }`}
+                                            }`}
                                     />
                                     <datalist id="country-options">
                                         {COUNTRIES.map((c) => (
@@ -660,6 +657,32 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                                 </div>
                                 {errors.country && <p className="text-xs text-red-500 font-bold mt-1">{errors.country}</p>}
                             </div>
+
+                            {/* Conference Role */}
+                            <div className="md:col-span-12">
+                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Conference Role <span className="text-red-500">*</span></label>
+                                <div className="relative">
+                                    <select
+                                        name="confRole"
+                                        value={formData.confRole}
+                                        onChange={handleChange}
+                                        required
+                                        className={`w-full h-[50px] pl-11 pr-10 rounded-xl border bg-gray-50 font-medium focus:outline-none focus:ring-2 transition-all appearance-none ${errors.confRole
+                                            ? 'border-red-300 focus:ring-red-100 focus:border-red-500'
+                                            : 'border-gray-200 focus:ring-brand-green/20 focus:border-brand-green'
+                                            }`}
+                                    >
+                                        <option value="">Select Role</option>
+                                        <option value="Participant">Participant</option>
+                                        <option value="Media">Media</option>
+                                    </select>
+                                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+                                    </div>
+                                    <Briefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                </div>
+                                {errors.confRole && <p className="text-xs text-red-500 font-bold mt-1">{errors.confRole}</p>}
+                            </div>
                         </div>
                     </div>
 
@@ -677,29 +700,27 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">January 21st, 2026</p>
                                 </div>
                             </div>
-                            
+
                             {/* Toggle Switch */}
                             {!isFieldVisitClosed && (
                                 <div className="flex bg-gray-100 p-1 rounded-xl">
                                     <button
                                         type="button"
                                         onClick={() => handleFieldVisitChange(false)}
-                                        className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${
-                                            !formData.fieldVisit 
-                                            ? 'bg-white text-gray-800 shadow-sm' 
+                                        className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${!formData.fieldVisit
+                                            ? 'bg-white text-gray-800 shadow-sm'
                                             : 'text-gray-500 hover:text-gray-700'
-                                        }`}
+                                            }`}
                                     >
                                         Not Attending
                                     </button>
                                     <button
                                         type="button"
                                         onClick={() => handleFieldVisitChange(true)}
-                                        className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${
-                                            formData.fieldVisit 
-                                            ? 'bg-brand-green text-white shadow-sm' 
+                                        className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wide transition-all ${formData.fieldVisit
+                                            ? 'bg-brand-green text-white shadow-sm'
                                             : 'text-gray-500 hover:text-gray-700'
-                                        }`}
+                                            }`}
                                     >
                                         I Will Attend
                                     </button>
@@ -724,7 +745,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                                 <p className="text-sm font-medium text-gray-600 mb-6">
                                     Select one of the following locations to visit. Transportation will be provided.
                                 </p>
-                                
+
                                 {errors.fieldVisitLocation && formData.fieldVisit && (
                                     <p className="text-xs font-bold text-red-500 uppercase tracking-wide mb-4 flex items-center">
                                         <AlertCircle size={12} className="mr-1" />
@@ -737,33 +758,30 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                                         <div
                                             key={loc.id}
                                             onClick={() => formData.fieldVisit && handleLocationSelect(loc.id)}
-                                            className={`relative group cursor-pointer rounded-2xl border transition-all duration-300 p-6 flex flex-col h-full ${
-                                                formData.fieldVisitLocation === loc.id && formData.fieldVisit
-                                                    ? 'bg-white border-brand-green ring-2 ring-brand-green/10 shadow-lg translate-y-[-4px]'
-                                                    : 'bg-white border-gray-200 hover:border-brand-green/50 hover:shadow-md hover:translate-y-[-2px]'
-                                            }`}
+                                            className={`relative group cursor-pointer rounded-2xl border transition-all duration-300 p-6 flex flex-col h-full ${formData.fieldVisitLocation === loc.id && formData.fieldVisit
+                                                ? 'bg-white border-brand-green ring-2 ring-brand-green/10 shadow-lg translate-y-[-4px]'
+                                                : 'bg-white border-gray-200 hover:border-brand-green/50 hover:shadow-md hover:translate-y-[-2px]'
+                                                }`}
                                         >
                                             <div className="flex justify-between items-start mb-4">
-                                                <div className={`p-2 rounded-xl transition-colors ${
-                                                    formData.fieldVisitLocation === loc.id && formData.fieldVisit
+                                                <div className={`p-2 rounded-xl transition-colors ${formData.fieldVisitLocation === loc.id && formData.fieldVisit
                                                     ? 'bg-brand-green text-white'
                                                     : 'bg-gray-100 text-gray-500 group-hover:bg-brand-green/10 group-hover:text-brand-green'
-                                                }`}>
+                                                    }`}>
                                                     <Sprout size={20} />
                                                 </div>
-                                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                                                    formData.fieldVisitLocation === loc.id && formData.fieldVisit
+                                                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${formData.fieldVisitLocation === loc.id && formData.fieldVisit
                                                     ? 'border-brand-green bg-brand-green text-white'
                                                     : 'border-gray-200 group-hover:border-brand-green/50'
-                                                }`}>
+                                                    }`}>
                                                     {formData.fieldVisitLocation === loc.id && formData.fieldVisit && <CheckCircle2 size={14} />}
                                                 </div>
                                             </div>
-                                            
+
                                             <h4 className="font-bold text-lg text-brand-black leading-tight mb-2 group-hover:text-brand-green transition-colors">
                                                 {loc.name}
                                             </h4>
-                                            
+
                                             <div className="mt-auto space-y-2 pt-4">
                                                 <div className="flex items-center text-xs font-medium text-gray-500">
                                                     <Sprout size={14} className="mr-2 opacity-70" />

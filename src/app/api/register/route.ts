@@ -15,7 +15,8 @@ export async function POST(request: Request) {
             jobTitle,
             country,
             fieldVisit,
-            fieldVisitLocation
+            fieldVisitLocation,
+            confRole
         } = body;
 
         // Basic validation - Removed email from required fields
@@ -32,16 +33,40 @@ export async function POST(request: Request) {
         try {
             await db.query(
                 `INSERT INTO registrants (
-                    title, firstName, lastName, email, phone, organization, jobTitle, country, fieldVisit, fieldVisitLocation
-                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-                [title, firstName, lastName, emailValue, phone, organization, jobTitle, country, !!fieldVisit, fieldVisitLocation]
+                    title, firstName, lastName, email, phone, organization, jobTitle, country, fieldVisit, fieldVisitLocation, conf_role
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+                [title, firstName, lastName, emailValue, phone, organization, jobTitle, country, !!fieldVisit, fieldVisitLocation, confRole]
             );
         } catch (dbError: unknown) {
-            const error = dbError as { code?: string };
-            if (error.code === '23505' && emailValue) { // Postgres unique violation code
+            const error = dbError as { code?: string; column?: string };
+
+            // Check for unique email violation
+            if (error.code === '23505' && emailValue) {
                 return NextResponse.json({ error: 'This email is already registered.' }, { status: 400 });
             }
-            throw dbError;
+
+            // FALLBACK: If ID auto-increment fails (NOT NULL violation on 'id')
+            if (error.code === '23502' && error.column === 'id') {
+                console.warn('Database auto-increment failed, attempting fallback with generated ID...');
+                // Generate random 8-digit ID (10000000 - 99999999)
+                const fallbackId = Math.floor(10000000 + Math.random() * 90000000);
+
+                try {
+                    await db.query(
+                        `INSERT INTO registrants (
+                            id, title, firstName, lastName, email, phone, organization, jobTitle, country, fieldVisit, fieldVisitLocation, conf_role
+                        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+                        [fallbackId, title, firstName, lastName, emailValue, phone, organization, jobTitle, country, !!fieldVisit, fieldVisitLocation, confRole]
+                    );
+                    // If successful, we continue normally
+                } catch (fallbackError) {
+                    console.error('Fallback ID insertion failed:', fallbackError);
+                    throw dbError; // Throw the original error if fallback also fails
+                }
+            } else {
+                // Determine if it is a different error
+                throw dbError;
+            }
         }
 
         // Send confirmation email via Brevo only if email is provided
