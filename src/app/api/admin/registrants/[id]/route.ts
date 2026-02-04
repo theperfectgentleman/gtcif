@@ -35,7 +35,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
             fieldVisitLocation: registrant.fieldvisitlocation,
             registrationDate: registrant.registrationdate,
             emailSent: registrant.emailsent,
-            emailSentAt: registrant.emailsentat
+            emailSentAt: registrant.emailsentat,
+            confRole: registrant.conf_role
         };
 
         return NextResponse.json(transformedRegistrant);

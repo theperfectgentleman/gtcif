@@ -11,12 +11,15 @@ type Registrant = {
     organization: string;
     jobTitle: string;
     country: string;
+    confRole?: string;
 };
 
 const BadgePage = () => {
     const params = useParams();
     const [registrant, setRegistrant] = useState<Registrant | null>(null);
     const [loading, setLoading] = useState(true);
+    const [showRole, setShowRole] = useState(true);
+    const [roleText, setRoleText] = useState('DELEGATE');
 
     useEffect(() => {
         const fetchRegistrant = async () => {
@@ -25,6 +28,9 @@ const BadgePage = () => {
                 if (response.ok) {
                     const data = await response.json();
                     setRegistrant(data);
+                    if (data.confRole) {
+                        setRoleText(data.confRole.toUpperCase());
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching registrant', error);
@@ -43,13 +49,50 @@ const BadgePage = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 print:bg-white print:p-0">
-            <div className="no-print mb-4">
-                <button 
-                    onClick={() => window.print()}
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                >
-                    Print Badge
-                </button>
+            <div className="no-print mb-8 p-6 bg-white rounded-xl shadow-sm border border-gray-200 w-full max-w-md">
+                <h3 className="text-lg font-bold text-gray-800 mb-4">Badge Settings</h3>
+
+                <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                        <input
+                            type="checkbox"
+                            id="showRole"
+                            checked={showRole}
+                            onChange={(e) => setShowRole(e.target.checked)}
+                            className="w-4 h-4 text-brand-green rounded border-gray-300 focus:ring-brand-green"
+                        />
+                        <label htmlFor="showRole" className="text-sm font-medium text-gray-700">Display Role on Badge</label>
+                    </div>
+
+                    {showRole && (
+                        <div>
+                            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Conference Role</label>
+                            <select
+                                value={roleText}
+                                onChange={(e) => setRoleText(e.target.value)}
+                                className="w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-brand-green"
+                            >
+                                <option value="DELEGATE">DELEGATE</option>
+                                <option value="PARTICIPANT">PARTICIPANT</option>
+                                <option value="MEDIA">MEDIA</option>
+                                <option value="SPEAKER">SPEAKER</option>
+                                <option value="VIP">VIP</option>
+                                <option value="ORGANIZER">ORGANIZER</option>
+                                <option value="EXHIBITOR">EXHIBITOR</option>
+                            </select>
+                        </div>
+                    )}
+
+                    <div className="pt-2">
+                        <button
+                            onClick={() => window.print()}
+                            className="w-full bg-brand-green text-white px-4 py-3 rounded-lg font-bold hover:bg-green-800 transition-colors flex items-center justify-center gap-2"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                            Print Badge
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {/* Badge Container - Standard A6 size approx */}
@@ -80,7 +123,9 @@ const BadgePage = () => {
 
                 {/* Footer */}
                 <div className="h-12 bg-brand-gold flex items-center justify-center">
-                    <p className="text-brand-green font-bold text-sm">DELEGATE</p>
+                    {showRole && (
+                        <p className="text-brand-green font-bold text-sm tracking-widest">{roleText}</p>
+                    )}
                 </div>
             </div>
 
