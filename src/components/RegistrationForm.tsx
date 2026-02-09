@@ -697,7 +697,7 @@ const RegistrationForm: React.FC<RegistrationFormProps> = ({ onSuccess }) => {
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-bold text-brand-black uppercase tracking-tight">Field Visit</h3>
-                                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">January 21st, 2026</p>
+                                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">February 21st, 2026</p>
                                 </div>
                             </div>
 
